@@ -1,0 +1,186 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+ul.no-bullets {
+  list-style-type: none; /* Remove bullets */
+  padding: 0; /* Remove padding */
+  margin: 0; /* Remove margins */
+}
+
+.sms-sent{
+  
+  background-color: rgb(69, 192, 96) !important;
+ 
+}
+
+.blue-gradient {
+  background: linear-gradient(to right, #c3d8e0, #80a0d3); /* Gradient from light blue to dark blue */
+  /* Sets text color to white for better visibility */
+ 
+ 
+ 
+ 
+}
+
+
+/* Custom styles for Bootstrap radio buttons */
+.custom-radio .form-check-input {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid #007bff;
+  appearance: none; /* Remove default style */
+  cursor: pointer;
+  position: relative;
+}
+
+.custom-radio .form-check-input:checked {
+  background-color: #007bff;
+  border-color: #007bff;
+}
+
+.custom-radio .form-check-input:checked::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 12px;
+  height: 12px;
+  background-color: white;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.custom-radio .form-check-input:focus {
+  box-shadow: none; /* Optional: removes the default Bootstrap focus outline */
+}
+
+/* Custom label styling */
+.custom-radio .form-check-label {
+  font-size: 1rem;
+  color: #495057; /* Adjust the color as needed */
+}
+
+/* Hover effect on the label */
+.custom-radio .form-check-label:hover {
+  color: #007bff;
+}
+
+
+.square{
+  width: 100%;
+  height: 120px;
+  background-color: rgb(243, 243, 243);
+  border-radius: 25px;
+  border: 1px solid #217aad;
+  padding: 10px;
+ 
+  overflow: hidden; /* make sure it hides the content that overflows */
+  white-space: nowrap; /* don't break the line */
+  text-overflow: clip; /* give the beautiful '...' effect */
+  
+}
+
+
+
+.page-wrap {
+  min-height: 100%;
+  /* equal to footer height */
+  margin-bottom: -142px; 
+}
+.page-wrap:after {
+  content: "";
+  display: block;
+}
+.site-footer, .page-wrap:after {
+  height: 142px; 
+}
+.site-footer {
+  background: orange;
+  margin-bottom: -142px;
+}
+.btn-circle.btn-xl {
+  width: 70px;
+  height: 70px;
+  padding: 13px 18px;
+  border-radius: 60px;
+  font-size: 15px;
+  text-align: center;
+  margin: 15px;
+  position: relative;
+}
+
+.btn-circle.btn-xl:hover {
+  transform: scale(1.1);
+}
+
+.footer{
+  
+  bottom: 0;
+  width: 100%;
+  height: 50px;
+  background-color: #659fc4;
+  text-align: center;
+  color: white;
+  
+}
+
+.grey-dark-gradient {
+  background: linear-gradient(to right, #1d2429, #1f1f20);
+  color: white; /* For better visibility of text */
+ 
+
+}
+.square:hover {
+  background-color: #b1d7ee;
+  transform: scale(1.1);
+  transition: all 150ms ease;
+}
+
+.row { 
+  margin-top: 0  !important;
+  
+}
+.row-container{
+  margin-bottom: 15px;
+}
+.container{
+  min-height: calc(100vh - 40px);
+}
+
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
