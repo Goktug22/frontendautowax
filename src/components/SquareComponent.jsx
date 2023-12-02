@@ -187,9 +187,9 @@ const handleDialogClick = e => {
     return( 
      
      <div className={  (col.smsSent ? 'sms-sent ' : '' )  + 'square text-center '  } id={col.id} onClick={()=>handleClick(col )}        >
-                <span> <b>  { col.plaka } </b> </span>
+                <span > <b>  { col.plaka } </b> </span>
                 <br/>
-                <span>  { getCarBrandLabel(col.marka )  }  </span>
+                <span >   { getCarBrandLabel(col.marka )  }  </span>
                 <br/>
                 <span> <i>  { renderSwitch(col.renk) } </i> </span>
 

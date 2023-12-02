@@ -280,7 +280,7 @@ const requestData = event => {
   }
    
    
-   let islem = {plaka: plaka, name: name, email:email, numara: telefon, islemler: sum , aktif: true, renk: renkSelectedOption.value, marka: carBrandOption.value, fiyat: fiyat};
+   let islem = {plaka: plaka, name: name, email:email, numara: telefon, islemler: sum , aktif: true, renk: renkSelectedOption.value, marka: carBrandOption.value, fiyat: fiyat, girisTarih: Date.now()};
 
   
 
@@ -336,8 +336,8 @@ const requestData = event => {
 
   return (
     <div>
-      <TriggerButton type="button" onClick={handleOpen}>
-      <i className="fa fa-plus-square fa-2x " aria-hidden="true"></i>
+      <TriggerButton type="button"   onClick={handleOpen}>
+      <i className="fa fa-plus-square fa-2x "   aria-hidden="true"></i>
       </TriggerButton>
       <Modal
         open={open}
@@ -346,6 +346,7 @@ const requestData = event => {
         closeAfterTransition
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
+        
       >
         <Fade in={open}>
         <ModalContent  sx={style} > 
@@ -423,7 +424,7 @@ const requestData = event => {
                             <div className='row'> 
                               
                               <div className='col'  style={ {marginTop: "13px"} }   >       <span className='pull left'>  <b> Toplam: </b> {fiyat}₺   </span>  </div>
-                              <div  className='col  '  >  <button className='btn btn-primary pull-right' style={ {marginTop: "10px"} } onClick={saveAracislem}>Kaydet</button> </div>
+                              <div  className='col  '  >  <button className='btn  pull-right' style={ {marginTop: "10px", backgroundColor: '#85857f', color: 'white'} } onClick={saveAracislem}>Kaydet</button> </div>
                             </div>
                             
                         </form>
@@ -560,8 +561,8 @@ const TriggerButton = styled('button')(
  
   transition: all 150ms ease;
   cursor: pointer;
-  background: #0d6efd;
-  border: 1px solid  #0d6efd   ;
+  background: #403f3d;
+  border: 1px solid  black  ;
   color: white;
   box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
 

@@ -13,9 +13,9 @@ class HeaderComponent extends Component {
             <div id='myhead'>
 
                 <header> 
-                    <nav className='navbar navbar-expand-md navbar-dark bg-dark'>
+                    <nav className='navbar navbar-expand-md myhead'>
                     <TemporaryDrawer />
-                        <div> <a href='/home'className='navbar-brand' > Autowax </a></div>
+                        <div> <a href='/home'className='navbar-brand' style={ { opacity : 1, fontWeight: 600}} > Autowax </a></div>
                         
                     </nav>
 

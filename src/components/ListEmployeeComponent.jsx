@@ -149,6 +149,10 @@ function getCarBrandLabel(value) {
 
 
 const arrayChunk = (arr, n) => {
+  if ( arr ===null){
+    let tmp =[];
+    return tmp ;
+  }
   const array = arr.slice();
   const chunks = [];
   while (array.length) chunks.push(array.splice(0, n));
@@ -157,7 +161,7 @@ const arrayChunk = (arr, n) => {
 
 const ListEmployeeComponent = () => {
   const [islemler,setIslemler] = useState( [] );  
-  const [aracislemler, setAracislemler] = useState([]);
+  const [aracislemler, setAracislemler] = useState(null);
   const [id,setId] = useState(0);
   const [open,setOpen] = useState(false);
   const [title,setTitle] = useState("");
@@ -173,6 +177,7 @@ const ListEmployeeComponent = () => {
   const [displayIslemler, setDisplayIslemler] = useState( [] );
   const [selectedOption, setSelectedOption] = useState('');
   const [alinanOdeme, setAlinanOdeme] = useState('');
+  
 
   
   const arsiveGonder = (event, id) => {
@@ -221,8 +226,20 @@ const ListEmployeeComponent = () => {
 
 
  
+  let aracislemData = {
+    
+    
+    odemeYontemi: odemeYontemi,
+    alinanOdeme: alinanOdeme,
+    
+    
+    
+    
+    cikisTarih: Date.now()
 
-    AracislemService.archiveAracislem( id , odemeYontemi, alinanOdeme ).then( res =>{
+  };
+  
+    AracislemService.archiveAracislem( id ,aracislemData ).then( res =>{
       if ( res.status === 200){
         toast.success('Kaydedildi', {
           position: "top-right",
@@ -328,9 +345,11 @@ const ListEmployeeComponent = () => {
  }
 
 
+
   useEffect(() => {
     AracislemService.getAracislemler().then((res) => {
       setAracislemler(res.data);
+      
     });
 
 
@@ -351,7 +370,7 @@ const ListEmployeeComponent = () => {
           {/* Possibly some content here */}
         </div>
         <div className='col-4'>
-          <h2 className='text-center' style={{ marginTop: '20px', color: '#343a40' , fontFamily: 'Fantasy' , fontWeight: 200}}>
+          <h2 className='text-center' style={{ marginTop: '20px', color: '#343a40' , fontFamily: 'Arial' , fontWeight: 500}}>
              İşlemdeki Araçlar 
           </h2>
         </div>
@@ -509,9 +528,11 @@ const ListEmployeeComponent = () => {
      
         </DialogContent>
       </Dialog>
-
-      <h2 className='text-center' style={{ fontFamily: "comic sans ms", marginBottom: "-40px"}} > Şimdilik İşlemde Hiç Araç Yok... </h2>
-      <img className = " img-fluid"src={arabaFoto} alt="Uyuyan Araba" />
+      
+      <div   style={{ display: (aracislemler === null || aracislemler.length > 0 ) ? 'none' : 'block' }}>
+        <h2 className='text-center' style={{ fontFamily: "comic sans ms", marginBottom: "-40px"}} > Şimdilik İşlemde Hiç Araç Yok... </h2>
+        <img className = " img-fluid" src={arabaFoto} alt="Uyuyan Araba" />
+      </div>
       {arrayChunk(aracislemler, 4).map((row, i) => (
         <div key={i} className="row gy-2 gx-2">
           {row.map((col, j) => (

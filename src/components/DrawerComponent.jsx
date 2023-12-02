@@ -12,6 +12,7 @@ import LocalCarWash from '@mui/icons-material/LocalCarWash';
 import Home from '@mui/icons-material/Home';
 import Inventory from '@mui/icons-material/Inventory';
 import { useNavigate } from 'react-router-dom';
+import { Opacity } from '@mui/icons-material';
 
 function TemporaryDrawer() {
   const [state, setState] = React.useState({
@@ -24,6 +25,9 @@ function TemporaryDrawer() {
   };
   const handleHomeNavigation = () => {
     navigate('/home');
+  };
+  const handleAracIslemNavigation = () => {
+    navigate('/aracislemler');
   };
 
   
@@ -65,7 +69,7 @@ function TemporaryDrawer() {
         </ListItem>
 
         <ListItem key="envanterTab" disablePadding>
-          <ListItemButton >
+          <ListItemButton onClick={handleAracIslemNavigation}>
             <ListItemIcon>
               <Inventory /> 
             </ListItemIcon>
@@ -86,7 +90,7 @@ function TemporaryDrawer() {
     <div>
       {
         <React.Fragment key={'left'}>
-          <Button onClick={toggleDrawer('left', true)}>   <i className="fa fa-bars fa-3x" aria-hidden="true"></i>        </Button>
+          <Button onClick={toggleDrawer('left', true)}>   <i className="fa fa-bars fa-3x" aria-hidden="true" style={ { color: '#2b2a29', opacity: 1  }}></i>        </Button>
           <Drawer
             anchor={'left'}
             open={state['left']}

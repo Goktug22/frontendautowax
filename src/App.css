@@ -36,12 +36,12 @@ ul.no-bullets {
 
 .sms-sent{
   
-  background-color: rgb(69, 192, 96) !important;
+  background-color: #f3da89 !important;
  
 }
 
 .blue-gradient {
-  background: linear-gradient(to right, #c3d8e0, #80a0d3); /* Gradient from light blue to dark blue */
+  background: linear-gradient(to right, #d9d9ce, #85857f); /* Gradient from light blue to dark blue */
   /* Sets text color to white for better visibility */
  
  
@@ -99,8 +99,9 @@ ul.no-bullets {
   height: 120px;
   background-color: rgb(243, 243, 243);
   border-radius: 25px;
-  border: 1px solid #217aad;
+  border: 1px solid black;
   padding: 10px;
+  font-size: large;
  
   overflow: hidden; /* make sure it hides the content that overflows */
   white-space: nowrap; /* don't break the line */
@@ -108,7 +109,13 @@ ul.no-bullets {
   
 }
 
-
+.myhead{
+  background-color: #f7c51e;
+  opacity: 0.7;
+}
+.gizemButon{
+  background-color: #403f3d;
+}
 
 .page-wrap {
   min-height: 100%;
@@ -146,9 +153,11 @@ ul.no-bullets {
   bottom: 0;
   width: 100%;
   height: 50px;
-  background-color: #659fc4;
+  background-color: #f7c51e;
+  opacity: 0.8;
   text-align: center;
   color: white;
+  
   
 }
 
@@ -159,9 +168,12 @@ ul.no-bullets {
 
 }
 .square:hover {
-  background-color: #b1d7ee;
+  
+  
+  
   transform: scale(1.1);
   transition: all 150ms ease;
+
 }
 
 .row { 

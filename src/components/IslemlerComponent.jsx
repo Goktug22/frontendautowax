@@ -1,68 +1,17 @@
 import Box from '@mui/material/Box';
 import { DataGrid, GridRowModes,
-    GridToolbarContainer,
     GridActionsCellItem,
     GridRowEditStopReasons } from '@mui/x-data-grid';
 import IslemService from '../services/IslemService';
 import React, { useState, useEffect } from 'react';
 import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button } from '@mui/material';
-import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/DeleteOutlined';
 import SaveIcon from '@mui/icons-material/Save';
 import CancelIcon from '@mui/icons-material/Close';
-import {
-    randomCreatedDate,
-    randomTraderName,
-    randomId,
-    randomArrayItem,
-  } from '@mui/x-data-grid-generator';
+import AddIcon from '@mui/icons-material/Add';
+import DeleteIcon from '@mui/icons-material/Delete';
 
-
-  const roles = ['Market', 'Finance', 'Development'];
-  const randomRole = () => {
-    return randomArrayItem(roles);
-  };
-  
-  const initialRows = [
-    {
-      id: randomId(),
-      name: randomTraderName(),
-      age: 25,
-      joinDate: randomCreatedDate(),
-      role: randomRole(),
-    },
-    {
-      id: randomId(),
-      name: randomTraderName(),
-      age: 36,
-      joinDate: randomCreatedDate(),
-      role: randomRole(),
-    },
-    {
-      id: randomId(),
-      name: randomTraderName(),
-      age: 19,
-      joinDate: randomCreatedDate(),
-      role: randomRole(),
-    },
-    {
-      id: randomId(),
-      name: randomTraderName(),
-      age: 28,
-      joinDate: randomCreatedDate(),
-      role: randomRole(),
-    },
-    {
-      id: randomId(),
-      name: randomTraderName(),
-      age: 23,
-      joinDate: randomCreatedDate(),
-      role: randomRole(),
-    },
-  ];
-
- function IslemlerComponent() {
+function IslemlerComponent() {
 
     const columns = [
         { field: 'id', headerName: 'ID', width: 90 },
@@ -145,14 +94,7 @@ import {
     const [newEntry, setNewEntry] = useState({ name: '', fiyat: '' });
     const [selectionModel, setSelectionModel] = useState([]);
     const [rowModesModel, setRowModesModel] = useState({});
-    const [rows, setRows] = React.useState(initialRows);
     
-
-
-    /*
-    Gok2
-    */
-
 
     const handleRowEditStop = (params, event) => {
         if (params.reason === GridRowEditStopReasons.rowFocusOut) {
@@ -168,10 +110,6 @@ import {
         
         setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
     
-      };
-    
-      const handleDeleteClick = (id) => () => {
-        setRows(rows.filter((row) => row.id !== id));
       };
     
       const handleCancelClick = (id) => () => {
@@ -205,13 +143,6 @@ import {
         }
     };
 
-
-       /*
-        Gok2
-    */
-
-
-
     useEffect(() => {
     
         const fetchData = async () => {
@@ -219,6 +150,7 @@ import {
               setLoading(true);
               const response = await IslemService.getIslemler();
               setData(response.data); 
+              console.log(response.data);
             } catch (error) {
               console.error('Error fetching data: ', error);
             } finally {
@@ -228,8 +160,6 @@ import {
       
           fetchData();
       }, []);
-
-
 
       const handleClickOpen = () => {
         setOpen(true);
@@ -275,60 +205,6 @@ import {
         setSelectionModel(newSelectionModel);
     };
 
-    const handleEditCellCommit = async (params) => {
-        try {
-
-            alert();
-
-
-            
-            const updatedRow = { ...params.row, [params.field]: params.value };
-            console.log(updatedRow);
-            return;
-            await IslemService.updateIslem(updatedRow.id, updatedRow); // Assuming this is your PUT API call
-    
-            const updatedData = data.map((row) => {
-                if (row.id === params.id) {
-                    return { ...row, [params.field]: params.value };
-                }
-                return row;
-            });
-    
-            setData(updatedData);
-        } catch (error) {
-            console.error('Error updating entry: ', error);
-            // Optionally, handle error state here (e.g., show a notification)
-        }
-    };
-
-    /*
-    const processRowUpdate = async (newRow) => {
-        try {
-            // Send the update to the backend
-            const response = await IslemService.updateIslem(newRow.id, newRow);
-    
-            // Update the local state
-            const updatedData = data.map((row) => {
-                if (row.id === newRow.id) {
-                    // This assumes the response contains the updated row
-                    return { ...response.data };
-                }
-                return row;
-            });
-    
-            setData(updatedData);
-            return newRow;
-        } catch (error) {
-            console.error('Error updating entry: ', error);
-            // Handle the error appropriately
-            // Optionally, you could throw an error here to prevent the grid from updating
-            throw error;
-        }
-    };
-    */
-    
-     
-
 
     return (
 
@@ -343,10 +219,10 @@ import {
         </div>
         <div className='row'> 
             <div className='col'>
-        <Button variant="contained" color="primary" onClick={handleClickOpen}>
+        <Button startIcon={<AddIcon />} variant="contained" style={{textTransform: 'none',backgroundColor:'#85857f', border: '1px solid black'}} onClick={handleClickOpen}>
             Yeni İşlem Ekle 
         </Button>
-        <Button variant="contained" color="secondary" onClick={handleDelete} disabled={selectionModel.length === 0}>
+        <Button startIcon={<DeleteIcon />} variant="contained" style={{textTransform: 'none',backgroundColor:'#f3da89',border: '1px solid black' , color: 'white'}}  onClick={handleDelete} disabled={selectionModel.length === 0}>
                 Seçilenleri Sil
         </Button>
         <Box sx={{ height: 400, width: '100%', backgroundColor: 'white' }}>
@@ -363,18 +239,10 @@ import {
             onRowEditStop={handleRowEditStop}
             processRowUpdate={processRowUpdate}
          
-          
-      
-            
             />
         </Box>
-
             </div>
         </div>
-
-
-
-       
 
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle> <b>Yeni İşlem Ekle </b> </DialogTitle>
@@ -406,15 +274,7 @@ import {
           <Button onClick={handleSubmit}>Add</Button>
         </DialogActions>
       </Dialog>
-
-
-
     </div>
-
     );
-
-  
 }
-
-
 export default IslemlerComponent;
