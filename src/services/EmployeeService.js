@@ -1,5 +1,6 @@
 
 import axios from 'axios';
+//axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('jwt')}`;
 
 const EMPLOYEE_API_BASE_URL = "http://localhost:8081/api/v1/employees";
 

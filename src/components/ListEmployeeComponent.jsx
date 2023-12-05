@@ -11,7 +11,7 @@ import IslemService from '../services/IslemService';
 import InputGroup from 'react-bootstrap/InputGroup';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import { toast } from "react-toastify";
-import arabaFoto from "../imgs/uyuyanAraba.png";
+import arabaFoto from "../imgs/uyuyanArabaYellow.png";
 function getCarBrandLabel(value) {
     switch (value) {
       case 'acura':
@@ -370,7 +370,7 @@ const ListEmployeeComponent = () => {
           {/* Possibly some content here */}
         </div>
         <div className='col-4'>
-          <h2 className='text-center' style={{ marginTop: '20px', color: '#343a40' , fontFamily: 'Arial' , fontWeight: 500}}>
+          <h2 className='text-center' style={{ marginTop: '20px', color: '#343a40' , fontFamily: 'Arial' , fontWeight: 600}}>
              İşlemdeki Araçlar 
           </h2>
         </div>

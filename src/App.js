@@ -12,9 +12,17 @@ import AracislemlerComponent from './components/AracIslemlerComponent';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import LoginComponent from './components/LoginComponent';
+import ProtectedRoute from './components/ProtectedRoute';
+
+import axios from 'axios';
+
 
 
 function App() {
+
+
+
   return (
     <div>
       <Router>
@@ -23,9 +31,12 @@ function App() {
         <HeaderComponent />
         <div className='blue-gradient'> 
         <div className='container'>
+
+
           <Routes>
+            <Route path="/login" element={<LoginComponent />} />
             <Route path="/" element = {<Navigate to="/home" />}/>
-            <Route path="/home" element = {<ListEmployeeComponent/>}/>
+            <Route path="/home" element = { <ProtectedRoute>  <ListEmployeeComponent/> </ProtectedRoute>}/>
             <Route path="/islemler" element = {  
             
             
