@@ -1,19 +1,158 @@
-import { Navigate } from 'react-router-dom';
+import IslemService from '../services/IslemService';
+import React, { useState, useEffect } from 'react';
+import { Navigate, Outlet } from 'react-router-dom';
+import { toast } from "react-toastify";
+import {jwtDecode} from 'jwt-decode';
 
-function ProtectedRoute({ children }) {
-    const isAuthenticated = () => {
-        console.log("inprotected");
-        const token = localStorage.getItem('token') || sessionStorage.getItem('token');
-        return !!token;
-    };
-    
 
-    if (!isAuthenticated) {
-        // Redirect to login page
-        return <Navigate to="/login" />;
+
+
+const PrivateRoutes = () => {
+
+    const setSessionTimeout = (jwt) => {
+        const decodedToken = jwtDecode(jwt);
+        const currentTime = Date.now().valueOf() / 1000;
+        console.log(  decodedToken.exp );
+        if (decodedToken.exp < currentTime) {
+          // Token already expired
+          logoutUser();
+          return;
+        }
+
+        
+      
+        setTimeout(() => {
+          logoutUser();
+        }, (decodedToken.exp - currentTime) * 1000);
+      };
+      
+      const logoutUser = () => {
+        localStorage.removeItem('jwt');
+        toast.error('Oturum zaman aşımına uğradı. Lütfen tekrar giriş yapınız.', {
+            position: "top-right",
+            autoClose: 2000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: false,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+            });
+        setAuth(false);
+        // Redirect to login or show session expired message
+      };
+
+
+    const [auth, setAuth] = useState(null); // Initialize auth as null
+
+    useEffect(() => {
+        console.log("token check");
+        const jwt = localStorage.getItem('jwt');
+        if (jwt) {
+        setSessionTimeout(jwt);
+        } else {
+        // Handle the case where there is no token
+        }
+        IslemService.getIslemler()
+        .then(response => {
+
+            setAuth(true); // Set auth to true on success
+        })
+        .catch(error => {
+            toast.error('Oturum zaman aşımına uğradı. Lütfen tekrar giriş yapınız.', {
+                position: "top-right",
+                autoClose: 2000,
+                hideProgressBar: true,
+                closeOnClick: true,
+                pauseOnHover: false,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+                });
+            setAuth(false); // Set auth to false on error
+        });
+    }, []); // Empty dependency array means this runs once after the first render
+
+    if (auth === null) {
+        // Render nothing or a loading spinner while waiting for the auth check
+        return <div></div>;
     }
 
-    return children;
+    return auth ? <Outlet /> : <Navigate to="/login" />;
+};
+
+export default PrivateRoutes;
+
+
+/*
+
+function ProtectedRoute({ children }) {
+    
+    const [loggedIn, setLoggedIn]  = useState(false);
+    
+
+
+
+    useEffect(() => {
+        /*
+        const fetchAracislemler = async () => {
+            try {
+                setLoading(true);
+                const response = await AracislemService.getAracislemlerAll();
+                setData(response.data);
+            } catch (error) {
+                console.error('Error fetching data: ', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchAracislemler();
+
+        
+
+        try{
+            IslemService.getIslemler()
+            .then(response => {
+                // Transform the data into the format required by react-select
+                console.log("BBBB");
+                return true;
+            })
+            .catch(error => {
+                console.log("CCCCC");
+                setLoggedIn(false);
+                return false;
+            });
+         }
+         catch(error){
+            console.log("DDDDD");
+         }
+
+
+    }, []);
+    
+
+  
+
+    return 
+    (
+        <div>
+
+       
+
+
+        {loggedIn && (
+          <Navigate to="/login" replace={true} />
+        )}
+
+        
+
+        
+        </div>
+    );
+    
+    
 }
 
 export default ProtectedRoute;
+*/

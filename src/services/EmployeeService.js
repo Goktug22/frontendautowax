@@ -1,6 +1,13 @@
 
 import axios from 'axios';
-//axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('jwt')}`;
+if ( `${localStorage.getItem('jwt')}`  == null ||  `${localStorage.getItem('jwt')}`  == 'null' ){
+    delete axios.defaults.headers.common["Authorization"];
+    console.log("GLOBAL SET null");    
+}
+else{
+    axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('jwt')}`;    
+    console.log("GLOBAL SET");
+}
 
 const EMPLOYEE_API_BASE_URL = "http://localhost:8081/api/v1/employees";
 
