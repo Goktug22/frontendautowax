@@ -13,6 +13,7 @@ import Home from '@mui/icons-material/Home';
 import Inventory from '@mui/icons-material/Inventory';
 import { useNavigate } from 'react-router-dom';
 import { Opacity } from '@mui/icons-material';
+import CarRepairIcon from '@mui/icons-material/CarRepair';
 
 function TemporaryDrawer() {
   const [state, setState] = React.useState({
@@ -28,6 +29,10 @@ function TemporaryDrawer() {
   };
   const handleAracIslemNavigation = () => {
     navigate('/aracislemler');
+  };
+
+  const handleEnvanterNavigation = () => {
+    navigate('/envanter');
   };
 
   
@@ -68,15 +73,24 @@ function TemporaryDrawer() {
           </ListItemButton>
         </ListItem>
 
-        <ListItem key="envanterTab" disablePadding>
+        <ListItem key="aracIslemTab" disablePadding>
           <ListItemButton onClick={handleAracIslemNavigation}>
+            <ListItemIcon>
+              <CarRepairIcon /> 
+            </ListItemIcon>
+            <ListItemText primary="Araç İşlemler" />
+          </ListItemButton>
+        </ListItem>
+
+        <ListItem key="envanterTab" disablePadding>
+          <ListItemButton onClick={handleEnvanterNavigation}>
             <ListItemIcon>
               <Inventory /> 
             </ListItemIcon>
             <ListItemText primary="Envanter" />
           </ListItemButton>
         </ListItem>
-
+        
       </List>
 
 

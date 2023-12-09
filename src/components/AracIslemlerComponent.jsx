@@ -231,7 +231,7 @@ function AracislemlerComponent() {
 
   const renderScrollableCell = (params) => {
     return (
-      <div className="myScrollableCell" style={{ maxHeight: '50px', overflow: 'auto',whiteSpace: 'pre-line',paddingRight: '8px' }}>
+      <div className="myScrollableCell" style={{ maxHeight: '50px', overflow: 'auto',whiteSpace: 'pre-line',paddingRight: '8px',textAlign: 'right' }}>
         {params.value}
       </div>
     );
@@ -311,7 +311,7 @@ function AracislemlerComponent() {
     if (!dateFilter.startDate && !dateFilter.endDate) {
         return true;
     }
-    const rowDate = new Date(row.girisTarih);
+    const rowDate = new Date(row.cikisTarih);
 
     return (
         (!dateFilter.startDate || rowDate > new Date(dateFilter.startDate)) &&
@@ -367,13 +367,18 @@ function AracislemlerComponent() {
                     // Additional props as required for editing, selecting, etc.
                 />
             </Box>
-            <div style={{ padding: '10px' , width: '20%'}}>
+            <div className='container' style={{ padding: '10px'}}>
+              <div className='row'>   
+                <div className='col-xl-3 col-l-4 col-md-6 col-sm-8 col-12'> 
+                  <span className="pull-left"><b>EFT:</b> {eftSum.toLocaleString()} ₺ </span> <br/>
+                  <span className="pull-left"><b>Nakit:</b> {nakitSum.toLocaleString()} ₺ </span> <br/>
+                  <span className="pull-left"> <b>Kredi Kartı: </b> {kartSum.toLocaleString()} ₺ </span><br/>
+                  <hr/>
+                  <b> Toplam Alınan Ödeme: </b> {totalSum.toLocaleString()} ₺
               
-              <span className="pull-left"><b>EFT:</b> {eftSum.toLocaleString()} ₺ </span> <br/>
-              <span className="pull-left"><b>Nakit:</b> {nakitSum.toLocaleString()} ₺ </span> <br/>
-              <span className="pull-left"> <b>Kredi Kartı: </b> {kartSum.toLocaleString()} ₺ </span><br/>
-              <hr/>
-              Toplam Alınan Ödeme: {totalSum.toLocaleString()} ₺
+                </div>
+              </div>
+             
               
             </div>
         </div>

@@ -15,6 +15,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import LoginComponent from './components/LoginComponent';
 
 import PrivateRoutes from './components/ProtectedRoute';
+import InventoryComponent from './components/InventoryComponent';
 import axios from 'axios';
 
 
@@ -41,6 +42,7 @@ function App() {
               <Route path="/home" element = {   <ListEmployeeComponent/> }/>
               <Route path="/islemler" element = {  <IslemlerComponent/> }/>
               <Route path="/aracislemler" element = {<AracislemlerComponent/>}/>
+              <Route path="/envanter" element = {<InventoryComponent/>}/>
             </Route>
             
             
