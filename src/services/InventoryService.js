@@ -17,10 +17,11 @@ class IslemService {
     createIslem(islem){
         return axios.post(ISLEM_API_BASE_URL,islem);
     }
-    deleteIslem(id){
-        return axios.delete(ISLEM_API_BASE_URL + "/" +id);
+      */
+    deleteItem(id){
+        return axios.delete(INVENTORY_API_BASE_URL + "/" +id);
     }
-    */
+  
     updateItem(id, amount, description ){
         return axios.put   (  (INVENTORY_API_BASE_URL + "/" +id) , null, {
 

@@ -1,10 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid,GridRow } from '@mui/x-data-grid';
 import InventoryService from '../services/InventoryService';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
 import Box from '@mui/material/Box';
 import AddIcon from '@mui/icons-material/Add';
 import InventoryChangeLogService from '../services/InventoryChangeLogService';
+import DeleteIcon from '@mui/icons-material/Delete';
+
+
+
+
+const renderScrollableCell = (params) => {
+    return (
+      <div className="myScrollableCell" style={{ maxHeight: '50px', overflow: 'auto',whiteSpace: 'pre-line',paddingRight: '8px',textAlign: 'left' }}>
+        {params.value}
+      </div>
+    );
+  };
+  
 
 const InventoryComponent = () => {
     const [inventory, setInventory] = useState([]);
@@ -17,10 +30,34 @@ const InventoryComponent = () => {
     const [openLogs, setOpenLogs] = useState(false);
     const [currentInventoryLogs, setCurrentInventoryLogs] = useState([]);
     const [selectedInventoryId, setSelectedInventoryId] = useState(null);
+    const [selectionModel, setSelectionModel] = useState([]);
+
+
 
     useEffect(() => {
           fetchInventory();
     }, []);
+
+    const handleDelete = async () => {
+        try {
+            // Call your service to delete the selected rows
+            await Promise.all(selectionModel.map(id => InventoryService.deleteItem(id)));
+
+            // Update local data state
+            setInventory(inventory.filter(item => !selectionModel.includes(item.id)));
+            setSelectionModel([]);
+        } catch (error) {
+            console.error('Error deleting entries: ', error);
+        }
+    };
+
+    const handleSelectionModelChange = (newSelectionModel) => {
+        
+        console.log("Selected rows:", newSelectionModel);
+        
+        setSelectionModel(newSelectionModel);
+    };
+
 
 
     const handleOpenLogs = async (id,name) => {
@@ -91,15 +128,25 @@ const InventoryComponent = () => {
         setOpen(false);
     };
 
+
+    
     const logColumns = [
 
         { field: 'changeDate', headerName: 'Değişim Tarihi', type: 'date', width: 200,
         valueGetter: (params) => params.value ? new Date(params.value) : null},
 
 
-        { field: 'changeDescription', headerName: 'Açıklama', width: 200,},
-        { field: 'previousAmount', headerName: 'Önceki Değer', width: 150 },
-        { field: 'currentAmount', headerName: 'Sonraki Değer', width: 150 },
+
+        { field: 'previousAmount', headerName: 'Önceki Adet', width: 150 },
+        { field: 'currentAmount', headerName: 'Sonraki Adet', width: 150 },
+
+        {
+            field: 'changeDescription',
+            headerName: 'Açıklama',
+            width: 250,
+            renderCell: (params) => renderScrollableCell(params), 
+            
+        },
         // Add other fields as needed
     ];
 
@@ -141,11 +188,34 @@ const InventoryComponent = () => {
                     Değişimler
                 </Button>
             ),
+
+            
             width: 150,
+
+            
         },
+
+       
         
         // Add other columns if needed
     ];
+
+    const CustomRowComponent = (props) => {
+        const { id, expanded, ...otherProps } = props;
+    
+        return (
+            <div>
+                <GridRow {...otherProps} /> {/* Render the normal row */}
+                {expanded && (
+                    <Box sx={{ height: 150, backgroundColor: 'lightgrey', padding: 2 }}>
+                        {/* Place your expanded content here */}
+                        Expanded content for row {id}
+                    </Box>
+                )}
+            </div>
+        );
+    };
+    
 
     return (
         <div> 
@@ -163,6 +233,10 @@ const InventoryComponent = () => {
         <Button startIcon={<AddIcon />} variant="contained" style={{textTransform: 'none',backgroundColor:'#85857f', border: '1px solid black'}} onClick={handleClickOpen}>
             Ekle 
         </Button>
+
+        <Button startIcon={<DeleteIcon />} variant="contained" style={{textTransform: 'none',backgroundColor:'#f3da89',border: '1px solid black' , color: 'white'}}  onClick={handleDelete} disabled={selectionModel.length === 0}>
+                Seçilenleri Sil
+        </Button>
         
         <Box sx={{ height: 400, width: '100%', backgroundColor: 'white' }}>
             <DataGrid
@@ -173,6 +247,8 @@ const InventoryComponent = () => {
                 pageSizeOptions={ [ 100 ]}
                 checkboxSelection
                 disableSelectionOnClick
+                onRowSelectionModelChange={handleSelectionModelChange}
+                rowSelectionModel={selectionModel}
             />
         </Box>
        
@@ -247,11 +323,17 @@ const InventoryComponent = () => {
                 <DialogTitle id="logs-dialog-title">Değişimler ({selectedInventoryId})</DialogTitle>
                 <DialogContent>
                     <DataGrid
+
                         rows={currentInventoryLogs}
+                        
+                        
+
+
                         columns={logColumns} 
                         pageSize={5}
-                        checkboxSelection
+
                         disableSelectionOnClick
+                        disableMultipleRowSelection={true}
                     />
                 </DialogContent>
             </Dialog>

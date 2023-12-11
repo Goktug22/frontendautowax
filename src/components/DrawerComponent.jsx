@@ -14,6 +14,7 @@ import Inventory from '@mui/icons-material/Inventory';
 import { useNavigate } from 'react-router-dom';
 import { Opacity } from '@mui/icons-material';
 import CarRepairIcon from '@mui/icons-material/CarRepair';
+import HotelIcon from '@mui/icons-material/Hotel';
 
 function TemporaryDrawer() {
   const [state, setState] = React.useState({
@@ -33,6 +34,10 @@ function TemporaryDrawer() {
 
   const handleEnvanterNavigation = () => {
     navigate('/envanter');
+  };
+
+  const handleLastikOtelNavigation = () => {
+    navigate('/lastikotel');
   };
 
   
@@ -88,6 +93,15 @@ function TemporaryDrawer() {
               <Inventory /> 
             </ListItemIcon>
             <ListItemText primary="Envanter" />
+          </ListItemButton>
+        </ListItem>
+
+        <ListItem key="lastikOtelTab" disablePadding>
+          <ListItemButton onClick={handleLastikOtelNavigation}>
+            <ListItemIcon>
+              <HotelIcon /> 
+            </ListItemIcon>
+            <ListItemText primary="Lastik Otel" />
           </ListItemButton>
         </ListItem>
         
