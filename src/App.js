@@ -17,6 +17,7 @@ import LoginComponent from './components/LoginComponent';
 import PrivateRoutes from './components/ProtectedRoute';
 import InventoryComponent from './components/InventoryComponent';
 import LastikOtelComponent from './components/LastikOtelComponent';
+import PublicRoutes from './components/UnprotectedRoute';
 import axios from 'axios';
 
 
@@ -36,8 +37,10 @@ function App() {
 
 
           <Routes>
-            <Route path="/login" element={<LoginComponent />} />
 
+          <Route element={<PublicRoutes />}> 
+            <Route path="/login" element={<LoginComponent />} />
+          </Route>
             <Route element={<PrivateRoutes />}>
               <Route path="/" element = {<Navigate to="/home" />}/>
               <Route path="/home" element = {   <ListEmployeeComponent/> }/>
@@ -46,11 +49,6 @@ function App() {
               <Route path="/envanter" element = {<InventoryComponent/>}/>
               <Route path="/lastikotel" element = {<LastikOtelComponent/>}/>
             </Route>
-            
-            
-            
-           
-            
 
           </Routes>
         </div>

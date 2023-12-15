@@ -92,6 +92,9 @@ ul.no-bullets {
 .custom-radio .form-check-label:hover {
   color: #007bff;
 }
+.pdfIconButton:hover {
+  background-color: #cc0000; /* Darker shade of red on hover */
+}
 
 
 .square{
