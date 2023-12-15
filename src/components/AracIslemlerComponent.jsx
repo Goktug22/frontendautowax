@@ -1,10 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect , useRef } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import { Box, Button,TextField } from '@mui/material';
 import AracislemService from '../services/AracislemService';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import IslemService from '../services/IslemService';
+import ListItemText from '@mui/material/ListItemText';
+import Checkbox from '@mui/material/Checkbox';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
 
 
 function getCarBrandLabel(value) {
@@ -183,13 +189,23 @@ function paymentSwitch(param) {
 }
 
 
-function CustomToolbar({ onApplyFilter }) {
+function CustomToolbar({ onApplyFilter, islemler } ) {
     const [startDate, setStartDate] = React.useState(null);
     const [endDate, setEndDate] = React.useState(null);
-  
+    const [selectedIslemler, setSelectedIslemler] = useState([]);
+
+
+    
     const handleApplyFilter = () => {
-      onApplyFilter({ startDate, endDate });
+      onApplyFilter({ startDate, endDate },selectedIslemler );
     };
+
+    const handleChangeSelectedIslemler = (event) => {
+      setSelectedIslemler(event.target.value);
+      
+    };
+
+    
   
     return (
     
@@ -206,6 +222,27 @@ function CustomToolbar({ onApplyFilter }) {
           onChange={setEndDate}
           renderInput={(params) => <TextField {...params} />}
         />
+
+        <FormControl sx={{ m: 1, width: 300 }}>
+        <InputLabel    >İşlemler</InputLabel>
+          <Select
+              label="İşlemler"
+              multiple
+              value={selectedIslemler}
+              onChange={handleChangeSelectedIslemler}
+              renderValue={(selected) => selected.map(id => islemler.find(islem => islem.id === id).name).join(', ')} 
+              
+          >
+              {islemler.map((islem) => (
+                  <MenuItem key={islem.id} value={islem.id}>
+                      <Checkbox checked={selectedIslemler.indexOf(islem.id) > -1} />
+                      <ListItemText primary={islem.name} />
+                  </MenuItem>
+              ))}
+          </Select>
+        </FormControl>
+
+
         <Button startIcon={<FilterAltIcon />} variant="contained" style={{textTransform: 'none',backgroundColor:'#85857f', border: '1px solid black'}} onClick={handleApplyFilter}>
           Filitrele
         </Button>
@@ -215,32 +252,7 @@ function CustomToolbar({ onApplyFilter }) {
 
 function AracislemlerComponent() {
 
-
-
-  function getIslemNames(param) {
-    let returnText = '';
-    for (let i = 0; i < islemler.length; i++) {
-      if ((islemler[i].id & param) > 0) {
-        returnText += (returnText ? '\n' : '') + islemler[i].name; // Add '\n' for new lines
-      }
-    }
-    return returnText;
-  }
-
- 
-
-  const renderScrollableCell = (params) => {
-    return (
-      <div className="myScrollableCell" style={{ maxHeight: '50px', overflow: 'auto',whiteSpace: 'pre-line',paddingRight: '8px',textAlign: 'right' }}>
-        {params.value}
-      </div>
-    );
-  };
-  
-
-
-
-
+    const [selectedIslemler, setSelectedIslemler] = useState([]);
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [dateFilter, setDateFilter] = useState({ startDate: null, endDate: null });
@@ -269,6 +281,41 @@ function AracislemlerComponent() {
         { field: 'cikisTarih', headerName: 'Çıkış Tarihi', width: 200, type: 'date',
         valueGetter: (params) => params.value ? new Date(params.value) : null}
     ];
+
+
+ 
+
+  // Function to check if a row matches the selected islemler
+  const isRowMatched = (row) => {
+      
+      if (selectedIslemler.length === 0) return true; // No filter applied
+      return selectedIslemler.every(id => (row.islemler & id) > 0);
+  };
+
+  
+
+    
+
+  function getIslemNames(param) {
+    let returnText = '';
+    for (let i = 0; i < islemler.length; i++) {
+      if ((islemler[i].id & param) > 0) {
+        returnText += (returnText ? '\n' : '') + islemler[i].name; // Add '\n' for new lines
+      }
+    }
+    return returnText;
+  }
+
+ 
+
+  const renderScrollableCell = (params) => {
+    return (
+      <div className="myScrollableCell" style={{ maxHeight: '50px', overflow: 'auto',whiteSpace: 'pre-line',paddingRight: '8px',textAlign: 'right' }}>
+        {params.value}
+      </div>
+    );
+  };
+  
 
     useEffect(() => {
         const fetchAracislemler = async () => {
@@ -303,17 +350,19 @@ function AracislemlerComponent() {
       
 
 
-    const handleApplyFilter = (filterValues) => {
+    const handleApplyFilter = (filterValues,selectedIslemler) => {
         setDateFilter(filterValues);
+        setSelectedIslemler(selectedIslemler);
+       
       };
 
     const filteredData = data.filter((row) => {
     if (!dateFilter.startDate && !dateFilter.endDate) {
-        return true;
+        return  isRowMatched(row) && true;
     }
     const rowDate = new Date(row.cikisTarih);
 
-    return (
+    return  isRowMatched(row) && (
         (!dateFilter.startDate || rowDate > new Date(dateFilter.startDate)) &&
         (!dateFilter.endDate || rowDate < new Date(dateFilter.endDate).setHours(23,59,59) )
     );
@@ -354,7 +403,9 @@ function AracislemlerComponent() {
     return (
         
         <div className='container' >
-            <CustomToolbar onApplyFilter={handleApplyFilter}  />
+
+            
+            <CustomToolbar onApplyFilter={handleApplyFilter} islemler={islemler}  />
             <Box sx={{ height: 600, width: '100%', backgroundColor: 'white' }}>
                 <DataGrid
                 

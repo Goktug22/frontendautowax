@@ -42,7 +42,7 @@ function App() {
             <Route path="/login" element={<LoginComponent />} />
           </Route>
             <Route element={<PrivateRoutes />}>
-              <Route path="/" element = {<Navigate to="/home" />}/>
+              <Route path="/" element = {<Navigate to="/login" />}/>
               <Route path="/home" element = {   <ListEmployeeComponent/> }/>
               <Route path="/islemler" element = {  <IslemlerComponent/> }/>
               <Route path="/aracislemler" element = {<AracislemlerComponent/>}/>

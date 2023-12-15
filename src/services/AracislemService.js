@@ -21,6 +21,9 @@ const ARACISLEM_API_BASE_URL = "http://localhost:8081/api/v1/aracislem";
 const ARACISLEM_API_SMS_URL = "http://localhost:8081/api/v1/sendsmsaracislembyid";
 const ARACISLEM_API_ARCHIVE_URL = "http://localhost:8081/api/v1/archivearacislembyid";
 const ARACISLEM_API_BASE_AKTIF_URL = "http://localhost:8081/api/v1/aracislemaktif";
+const ARACISLEM_API_LAST_URL = "http://localhost:8081/api/v1/aracislemlast3";
+
+
 
 
 class AracislemService {
@@ -40,6 +43,9 @@ class AracislemService {
     getAracislemByPlaka(plaka){
 
         return axios.get(ARACISLEM_API_BASE_URL + "/" +plaka);
+    }
+    getLast3AracIslemByPlaka(plaka){
+        return axios.get(ARACISLEM_API_LAST_URL + "/" +plaka);
     }
     archiveAracislem(id,aracislem){
         console.log(aracislem);

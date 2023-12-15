@@ -108,14 +108,21 @@ function ModalUnstyled(props) {
   const [carBrandOption, setCarBrandOption] = useState("");
   const [open, setOpen] = React.useState(false) ;
   const handleOpen = () => setOpen(true);
-  const handleClose = () => {setOpen(false); setEmail(""); setPlaka(""); setName("");setTelefon("");setTestSelectedOption("");setRenkSelectedOption("");setCarBrandOption(""); } 
+  const handleClose = () => {setOpen(false); setEmail(""); setPlaka(""); setName("");setTelefon("");setTestSelectedOption("");setRenkSelectedOption("");setCarBrandOption(""); setLastThreeEntries( [] ); } 
   const [plaka, setPlaka] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [telefon, setTelefon] = useState("");
   const [fiyat, setFiyat] = useState(0);
+  const [selectedIslemler, setSelectedIslemler] = useState([]);
+  const [lastThreeEntries, setLastThreeEntries] = useState([]);
 
 
+  const processIslemler = (islemlerValue) => {
+    const selectedOptions = options.filter(option => (option.value & islemlerValue) !== 0);
+    setSelectedIslemler(selectedOptions.map(option => option.label));
+  };
+  
   const setColorValueProgrammatically = colorValue => {
     const option = colorOptions.find(option => option.value === colorValue);
     setRenkSelectedOption(option);
@@ -152,17 +159,28 @@ const requestData = event => {
     return;
   }
 
-  console.log(renkSelectedOption);
-  AracislemService.getAracislemByPlaka(plaka).then( (res) => {
-    if ( res.data !== ""){
-      setColorValueProgrammatically(res.data.renk);
-      setBrandValueProgrammatically(res.data.marka);
-      setName(res.data.name);
-      setEmail(res.data.email);
-      setTelefon(res.data.numara);
+  AracislemService.getLast3AracIslemByPlaka(plaka).then( (res) => {
+    
+    const entries = res.data.map(entry => {
+      const selectedOptions = options.filter(option => (option.value & entry.islemler) !== 0);
+      return {
+        ...entry,
+        selectedIslemler: selectedOptions.map(option => option.label)
+      };
+    });
+    setLastThreeEntries(entries);
+
+    if ( res.data.length > 0 ){
+      setColorValueProgrammatically(res.data[0].renk);
+      setBrandValueProgrammatically(res.data[0].marka);
+      setName(res.data[0].name);
+      setEmail(res.data[0].email);
+      setTelefon(res.data[0].numara);
+      processIslemler(res.data[0].islemler);
       //copy data 
 
     }
+    
 }  );
  
 
@@ -426,7 +444,32 @@ const requestData = event => {
                               <div className='col'  style={ {marginTop: "13px"} }   >       <span className='pull left'>  <b> Toplam: </b> {fiyat}₺   </span>  </div>
                               <div  className='col  '  >  <button className='btn  pull-right' style={ {marginTop: "10px", backgroundColor: '#85857f', color: 'white'} } onClick={saveAracislem}>Kaydet</button> </div>
                             </div>
-                            
+
+                            <div className='row'>
+                              <div className='col'>
+                              <table>
+                                <thead>
+                                  <tr>
+                                  
+                                    <th colSpan={2}>Önceki İşlemler</th>
+                                   
+                                    {/* add more columns as needed */}
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  {lastThreeEntries.map((entry, index) => (
+                                    <tr key={index + 1}>
+                                   
+                                      <td> {index + 1 } ) {entry.selectedIslemler.join(", ")}</td>
+                                    
+                                      {/* render more details as needed */}
+                                    </tr>
+                                  ))}
+                                </tbody>
+                              </table>
+                              </div>
+
+                            </div>
                         </form>
                     </div>
                 </div>
