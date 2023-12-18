@@ -65,7 +65,7 @@ function IslemlerComponent() {
                 />,
                 <GridActionsCellItem
                   icon={<CancelIcon />}
-                  label="Cancel"
+                  label="İptal"
                   className="textPrimary"
                   onClick={handleCancelClick(id)}
                   color="inherit"

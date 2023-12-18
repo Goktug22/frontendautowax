@@ -12,6 +12,7 @@ import InputGroup from 'react-bootstrap/InputGroup';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import { toast } from "react-toastify";
 import arabaFoto from "../imgs/uyuyanArabaYellow.png";
+import PersonelService from '../services/PersonelService';
 function getCarBrandLabel(value) {
     switch (value) {
       case 'acura':
@@ -177,13 +178,15 @@ const ListEmployeeComponent = () => {
   const [displayIslemler, setDisplayIslemler] = useState( [] );
   const [selectedOption, setSelectedOption] = useState('');
   const [alinanOdeme, setAlinanOdeme] = useState('');
-  
+  const [personels, setPersonels] = useState([]);
+  const [selectedPersonel, setSelectedPersonel] = useState (0);
+  const [bahsis, setBahsis] = useState(''); 
 
   
   const arsiveGonder = (event, id) => {
     
  
- 
+ console.log(alinanOdeme);
   
   if ( selectedOption === ""){
     toast.error('Lütfen Ödeme Yöntemi Seçiniz', {
@@ -228,13 +231,10 @@ const ListEmployeeComponent = () => {
  
   let aracislemData = {
     
-    
+    personel: { id: selectedPersonel },
     odemeYontemi: odemeYontemi,
     alinanOdeme: alinanOdeme,
-    
-    
-    
-    
+    bahsis: bahsis,
     cikisTarih: Date.now()
 
   };
@@ -261,7 +261,7 @@ const ListEmployeeComponent = () => {
 
           
       
-        //disable the button
+        
       }
      } );
   
@@ -314,6 +314,8 @@ const ListEmployeeComponent = () => {
     setSmsSent(obj.smsSent);
     setSelectedOption("");
     setAlinanOdeme("");
+    setSelectedPersonel(0);
+    setBahsis(0);
     //setDisplayIslemler([]);
     //setTotalSum(0);
     //perform bitwise and operation and create a list of operations
@@ -344,6 +346,12 @@ const ListEmployeeComponent = () => {
 
  }
 
+ const changeBahsis = event => {
+  setBahsis( event.target.value );
+
+}
+
+
 
 
   useEffect(() => {
@@ -356,12 +364,31 @@ const ListEmployeeComponent = () => {
     IslemService.getIslemler().then((res) => {
       setIslemler(res.data);
     });
+
+    PersonelService.getPersonelList().then((res) => {
+      setPersonels(res.data);
+    });
+
+
   }, []);
 
 
   const handleClose = () => {
     setOpen(false);
   };
+
+  const tenPercent = () => {
+    let sum = totalsum;
+    sum = sum / 100 * 90;
+    sum = Math.floor(sum);
+    setAlinanOdeme(sum);
+  }
+  const twentyPercent = () => {
+    let sum = totalsum;
+    sum = sum / 100 * 80;
+    sum = Math.floor(sum);
+    setAlinanOdeme(sum);
+  }
 
   return (
     <div>
@@ -444,6 +471,10 @@ const ListEmployeeComponent = () => {
       <li>
         <span>     <i className="fa fa-shopping-cart" aria-hidden="true"></i> Toplam: </span> <span className='pull-right'>  {totalsum} ₺ </span>
       </li>
+      <li>
+        <span>    <button className='btn btn-secondary' onClick={tenPercent}> %10 </button>  <button className='btn btn-secondary' onClick={twentyPercent} > %20 </button> </span>
+      </li>
+     
     </ul> 
 
     <br></br>
@@ -513,11 +544,60 @@ const ListEmployeeComponent = () => {
     </FloatingLabel> 
         <InputGroup.Text id="basic-addon1">₺</InputGroup.Text>
       </InputGroup>
+
+      
     
   </div>
 
 
 </div>
+<br></br>
+<div className='row'>
+  <div className='col'>
+
+
+
+    <InputGroup className="w-50">
+    <FloatingLabel controlId="floatingBahsis" label="Bahşiş">
+        <Form.Control
+          type="number"
+          placeholder="Bahşiş"
+          aria-label="Bahsis"
+          aria-describedby="basic-addon1"
+          value={bahsis}
+          onChange={changeBahsis}
+        />
+    </FloatingLabel> 
+        <InputGroup.Text id="basic-addon1">₺</InputGroup.Text>
+      </InputGroup>
+    
+  </div>
+
+
+</div>
+<br></br>
+<div className='row'>
+  <div className='col'>
+
+  <InputGroup className="w-50">
+    <Form.Group controlId="formPersonel">
+      <Form.Control as="select" value={selectedPersonel} onChange={e => setSelectedPersonel(e.target.value)}>
+      <option value="">Personel Seçiniz</option>
+          {personels.map(personel => (
+              <option key={personel.id} value={personel.id}>
+                  {personel.name}
+              </option>
+          ))}
+      </Form.Control>
+    </Form.Group>
+  </InputGroup>
+  </div>
+
+
+</div>
+
+
+
 
     <br></br>
         <button onClick={(event) => smsGonder(event, id)} type="button" className={"btn btn-success " +  (smsSent ? "disabled" : ""  )  }> <i className="fa fa-envelope-o" aria-hidden="true"></i> Sms Gönder</button>

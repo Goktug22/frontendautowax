@@ -15,6 +15,7 @@ import { useNavigate } from 'react-router-dom';
 import { Opacity } from '@mui/icons-material';
 import CarRepairIcon from '@mui/icons-material/CarRepair';
 import HotelIcon from '@mui/icons-material/Hotel';
+import PersonIcon from '@mui/icons-material/Person';
 
 function TemporaryDrawer() {
   const [state, setState] = React.useState({
@@ -24,6 +25,10 @@ function TemporaryDrawer() {
 
   const handleIslemNavigation = () => {
     navigate('/islemler');
+  };
+
+  const handlePersonelNavigation = () => {
+    navigate('/personel');
   };
   const handleHomeNavigation = () => {
     navigate('/home');
@@ -75,6 +80,15 @@ function TemporaryDrawer() {
               <LocalCarWash /> 
             </ListItemIcon>
             <ListItemText primary="İşlemler" />
+          </ListItemButton>
+        </ListItem>
+
+        <ListItem key="personelTab" disablePadding>
+          <ListItemButton  onClick={handlePersonelNavigation}>
+            <ListItemIcon>
+              <PersonIcon /> 
+            </ListItemIcon>
+            <ListItemText primary="Personel" />
           </ListItemButton>
         </ListItem>
 

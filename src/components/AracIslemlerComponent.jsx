@@ -263,8 +263,8 @@ function AracislemlerComponent() {
     const [kartSum, setKartSum] = useState(0);
 
     const columns = [
-        { field: 'id', headerName: 'ID', width: 90 },
-        { field: 'name', headerName: 'Adı', width: 200 },
+       
+        { field: 'name', headerName: 'İsim', width: 200 },
         { field: 'plaka', headerName: 'Plaka', width: 130 },
         { field: 'numara', headerName: 'Numara', width: 150 },
         { field: 'email', headerName: 'Email', width: 200 },
@@ -279,7 +279,14 @@ function AracislemlerComponent() {
         { field: 'girisTarih', headerName: 'Giriş Tarihi', width: 200 , type: 'date',
         valueGetter: (params) => params.value ? new Date(params.value) : null},
         { field: 'cikisTarih', headerName: 'Çıkış Tarihi', width: 200, type: 'date',
-        valueGetter: (params) => params.value ? new Date(params.value) : null}
+        valueGetter: (params) => params.value ? new Date(params.value) : null},
+        {
+          field: 'personel',
+          headerName: 'Personel',
+          width: 200,
+          renderCell: (params) => params.value ? params.value.name : ''
+        },
+        { field: 'bahsis',align: 'left', headerAlign: 'left', headerName: 'Bahşiş', width: 150, type: 'number' ,renderCell: (params) => params.value != null ? `${params.value} ₺` : '' },
     ];
 
 
@@ -322,6 +329,7 @@ function AracislemlerComponent() {
             try {
                 setLoading(true);
                 const response = await AracislemService.getAracislemlerAll();
+                console.log(response.data);
                 setData(response.data);
             } catch (error) {
                 console.error('Error fetching data: ', error);
@@ -414,8 +422,7 @@ function AracislemlerComponent() {
                     pageSize={10}
                     loading={loading}
                     pageSizeOptions={[5, 10, 20, 50, 100]}
-                    checkboxSelection
-                    // Additional props as required for editing, selecting, etc.
+                    
                 />
             </Box>
             <div className='container' style={{ padding: '10px'}}>

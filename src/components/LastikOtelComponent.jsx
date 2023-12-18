@@ -14,7 +14,10 @@ import IconButton from '@mui/material/IconButton';
 import ArchiveIcon from '@mui/icons-material/Archive'; // import the icon you want to use for the button
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { jsPDF } from 'jspdf';
-import PictureAsPdfIcon  from '@mui/icons-material/PictureAsPdf'
+import PictureAsPdfIcon  from '@mui/icons-material/PictureAsPdf';
+import AracislemService from '../services/AracislemService';
+import { darken, lighten,styled } from '@mui/material/styles';
+
 
 
 
@@ -26,6 +29,25 @@ const renderScrollableCell = (params) => {
       </div>
     );
   };
+
+const getBackgroundColor = (color, mode) => 
+    mode === 'dark' ? darken(color, 0.6) : lighten(color, 0.6);
+
+const StyledDataGrid = styled(DataGrid)(({ theme }) => ({
+  '& .row-old': {
+    backgroundColor: getBackgroundColor('rgb(173, 55, 55)', theme.palette.mode),
+    '&:hover': {
+      backgroundColor: getBackgroundColor('rgb(300, 2, 2)', theme.palette.mode),
+    },
+    '&.Mui-selected': {
+      backgroundColor: getBackgroundColor('rgb(1, 1, 100)', theme.palette.mode),
+      '&:hover': {
+        backgroundColor: getBackgroundColor('rgb(1, 1, 100)', theme.palette.mode),
+      },
+    },
+  },
+  // ... add other row styles if needed
+}));
   
 
 const LastikOtelComponent = () => {
@@ -92,6 +114,19 @@ const LastikOtelComponent = () => {
 
 
     ];
+
+
+    const isOlderThanSixMonths = (girisTarih, cikisTarih) => {
+        if (!girisTarih) return false;
+    
+        const sixMonthsAgo = new Date();
+        sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
+    
+        const girisDate = new Date(girisTarih);
+        return girisDate < sixMonthsAgo && !cikisTarih;
+    };
+
+    
     const applyFilter = (filter) => {
         const filteredData = filter ? allRows.filter(item => item.aktif) : allRows;
         setRows(filteredData);
@@ -121,16 +156,24 @@ const LastikOtelComponent = () => {
         setOpen(false);
     };
 
+
     const handleAdd = async () => {
         try {
             await LastikOtelService.createLastikOtel(newLastikOtel);
             fetchData();
-            setNewLastikOtel({ plaka: '',  fiyat: 0 }); // Reset form
+            setNewLastikOtel({ 
+                description: '', 
+                plaka: '', 
+                isim: '', 
+                numara: '', 
+                fiyat: 0 
+            }); // Reset form with all fields defined
             handleClose();
         } catch (error) {
             console.error('Error adding new data: ', error);
         }
     };
+    
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -140,6 +183,25 @@ const LastikOtelComponent = () => {
                     name === 'plaka' ? value.toUpperCase() : value 
         });
     };
+
+
+    const requestData = event => {
+        if (newLastikOtel.plaka === "") {
+            return;
+        }
+    
+        AracislemService.getLast3AracIslemByPlaka(newLastikOtel.plaka).then((res) => {
+            if (res.data.length > 0) {
+                setNewLastikOtel(prevState => ({
+                    ...prevState,  // Keep the existing state
+                    isim: res.data[0].name || '',  // Set isim, default to empty string
+                    numara: res.data[0].numara || ''  // Set numara, default to empty string
+                }));
+            }
+        });
+    }
+    
+    
 
     const handleArchive = async (id) => {
         try {
@@ -155,26 +217,42 @@ const LastikOtelComponent = () => {
     const generatePdf = (rowData) => {
         const doc = new jsPDF();
     
-        // Set a large font size
-        doc.setFontSize(72);
+        const pageWidth = doc.internal.pageSize.getWidth();
+        const pageHeight = doc.internal.pageSize.getHeight();
     
-        // Assuming 'PLAKA' and 'otelNo' are the keys in your rowData
-        const plaka = rowData.plaka;
-        const otelNo = rowData.otelNo;
+        // Define the positions for the four sections
+        const positions = [
+            { x: pageWidth / 2, y: pageHeight / 4-30 },
+            { x: pageWidth / 2, y: pageHeight / 2-30 },
+            { x: pageWidth / 2, y: (pageHeight * 3) / 4 -30 },
+            { x: pageWidth / 2, y: pageHeight-30 }
+        ];
     
-        // Adjust these values as needed for your layout
-        const plakaPositionY = 30; // Y position for PLAKA
-        const otelNoPositionY = 60; // Y position for otelNo
-    
-        // Add PLAKA and otelNo to the PDF
-        doc.text(` ${plaka}`, 10, plakaPositionY);
-        doc.text(` Otel No: ${otelNo}`, 10, otelNoPositionY);
+        // Set a smaller font size for better fit
+        doc.setFontSize(48);
+        doc.setFont('helvetica', 'bold');
+        // Loop through each position and print the text
+        positions.forEach((pos) => {
+            doc.text(`${rowData.plaka}`, pos.x, pos.y - 20, { align: 'center' });
+            doc.text(`-${rowData.otelNo}-`, pos.x, pos.y, { align: 'center' });
+        });
     
         // Open PDF in new tab
         const pdfBlob = doc.output('blob');
         const url = URL.createObjectURL(pdfBlob);
         window.open(url, '_blank');
     };
+    
+
+
+    const getRowClassName = (params) => {
+        if (isOlderThanSixMonths(params.row.girisTarih, params.row.cikisTarih)) {
+            return 'row-old';
+        }
+        // Add more conditions as needed
+        return '';
+    };
+    
     
     
     
@@ -211,12 +289,13 @@ const LastikOtelComponent = () => {
             <Box sx={{ height: 400, width: '100%', backgroundColor: 'white' }}>
 
            
-            <DataGrid
+            <StyledDataGrid
                 rows={rows}
                 columns={columns}
                 pageSize={100}
                 loading={loading}                
                 disableSelectionOnClick
+                getRowClassName={getRowClassName}
             />
 
 <Dialog open={open} onClose={handleClose}>
@@ -242,6 +321,7 @@ const LastikOtelComponent = () => {
                         fullWidth
                         variant="standard"
                         onChange={handleChange}
+                        onBlur={requestData}
                         inputProps={{ style: { textTransform: 'uppercase' } }}
                     />
                     <TextField
@@ -252,6 +332,7 @@ const LastikOtelComponent = () => {
                         type="text"
                         fullWidth
                         variant="standard"
+                        value={newLastikOtel.isim}
                         onChange={handleChange}
                     />
                     <TextField
@@ -262,6 +343,7 @@ const LastikOtelComponent = () => {
                         type="text"
                         fullWidth
                         variant="standard"
+                        value={newLastikOtel.numara}
                         onChange={handleChange}
                     />
                     <TextField
@@ -276,8 +358,8 @@ const LastikOtelComponent = () => {
                     />
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleClose}>Cancel</Button>
-                    <Button onClick={handleAdd}>Add</Button>
+                    <Button onClick={handleClose}>İptal</Button>
+                    <Button onClick={handleAdd}>Ekle</Button>
                 </DialogActions>
             </Dialog>
         

@@ -451,7 +451,8 @@ const requestData = event => {
                                 <thead>
                                   <tr>
                                   
-                                    <th colSpan={2}>Önceki İşlemler</th>
+                                  <th style={{ display: lastThreeEntries.length == 0 ? 'none' : 'table-cell' }} colSpan={2}>Önceki İşlemler</th>
+
                                    
                                     {/* add more columns as needed */}
                                   </tr>

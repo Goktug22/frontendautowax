@@ -18,7 +18,7 @@ import PrivateRoutes from './components/ProtectedRoute';
 import InventoryComponent from './components/InventoryComponent';
 import LastikOtelComponent from './components/LastikOtelComponent';
 import PublicRoutes from './components/UnprotectedRoute';
-import axios from 'axios';
+import PersonelComponent from './components/PersonelComponent';
 
 
 
@@ -38,13 +38,14 @@ function App() {
 
           <Routes>
 
-          <Route element={<PublicRoutes />}> 
-            <Route path="/login" element={<LoginComponent />} />
-          </Route>
+            <Route element={<PublicRoutes />}> 
+              <Route path="/login" element={<LoginComponent />} />
+            </Route>
             <Route element={<PrivateRoutes />}>
               <Route path="/" element = {<Navigate to="/login" />}/>
               <Route path="/home" element = {   <ListEmployeeComponent/> }/>
               <Route path="/islemler" element = {  <IslemlerComponent/> }/>
+              <Route path="/personel" element = {  <PersonelComponent/> }/>
               <Route path="/aracislemler" element = {<AracislemlerComponent/>}/>
               <Route path="/envanter" element = {<InventoryComponent/>}/>
               <Route path="/lastikotel" element = {<LastikOtelComponent/>}/>

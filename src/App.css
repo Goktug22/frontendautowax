@@ -96,6 +96,11 @@ ul.no-bullets {
   background-color: #cc0000; /* Darker shade of red on hover */
 }
 
+.row-old {
+  background-color: rgb(173, 55, 55);
+}
+
+
 
 .square{
   width: 100%;
