@@ -16,6 +16,7 @@ import { Opacity } from '@mui/icons-material';
 import CarRepairIcon from '@mui/icons-material/CarRepair';
 import HotelIcon from '@mui/icons-material/Hotel';
 import PersonIcon from '@mui/icons-material/Person';
+import LocalParkingIcon from '@mui/icons-material/LocalParking';
 
 function TemporaryDrawer() {
   const [state, setState] = React.useState({
@@ -44,6 +45,10 @@ function TemporaryDrawer() {
   const handleLastikOtelNavigation = () => {
     navigate('/lastikotel');
   };
+  const handleUcretliOtoparkNavigation = () => {
+    navigate('/ucretliotopark');
+  };
+
 
   
 
@@ -116,6 +121,15 @@ function TemporaryDrawer() {
               <HotelIcon /> 
             </ListItemIcon>
             <ListItemText primary="Lastik Otel" />
+          </ListItemButton>
+        </ListItem>
+
+        <ListItem key="ucretliOtoparkTab" disablePadding>
+          <ListItemButton onClick={handleUcretliOtoparkNavigation}>
+            <ListItemIcon>
+              <LocalParkingIcon /> 
+            </ListItemIcon>
+            <ListItemText primary="Ucretli Otopark" />
           </ListItemButton>
         </ListItem>
         
