@@ -20,6 +20,7 @@ import LastikOtelComponent from './components/LastikOtelComponent';
 import PublicRoutes from './components/UnprotectedRoute';
 import PersonelComponent from './components/PersonelComponent';
 import UcretliOtoparkComponent from './components/UcretliOtoparkComponent';
+import SaleComponent from './components/SaleComponent';
 
 
 
@@ -51,6 +52,7 @@ function App() {
               <Route path="/envanter" element = {<InventoryComponent/>}/>
               <Route path="/lastikotel" element = {<LastikOtelComponent/>}/>
               <Route path="/ucretliotopark" element = {<UcretliOtoparkComponent/>}/>
+              <Route path="/satis" element = {<SaleComponent/>}/>
             </Route>
 
           </Routes>

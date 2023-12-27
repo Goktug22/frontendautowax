@@ -17,6 +17,7 @@ import CarRepairIcon from '@mui/icons-material/CarRepair';
 import HotelIcon from '@mui/icons-material/Hotel';
 import PersonIcon from '@mui/icons-material/Person';
 import LocalParkingIcon from '@mui/icons-material/LocalParking';
+import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 
 function TemporaryDrawer() {
   const [state, setState] = React.useState({
@@ -48,6 +49,10 @@ function TemporaryDrawer() {
   const handleUcretliOtoparkNavigation = () => {
     navigate('/ucretliotopark');
   };
+  const handleSalesNavigation = () => {
+    navigate('/satis');
+  };
+  
 
 
   
@@ -132,6 +137,16 @@ function TemporaryDrawer() {
             <ListItemText primary="Ucretli Otopark" />
           </ListItemButton>
         </ListItem>
+
+        <ListItem key="salesTab" disablePadding>
+          <ListItemButton onClick={handleSalesNavigation}>
+            <ListItemIcon>
+              <MonetizationOnIcon /> 
+            </ListItemIcon>
+            <ListItemText primary="Satış" />
+          </ListItemButton>
+        </ListItem>
+
         
       </List>
 
