@@ -17,11 +17,32 @@ import { jsPDF } from 'jspdf';
 import PictureAsPdfIcon  from '@mui/icons-material/PictureAsPdf';
 import AracislemService from '../services/AracislemService';
 import { darken, lighten,styled } from '@mui/material/styles';
+import { toast } from 'react-toastify';
 
 
 
 
+const toastSettings = {
+    position: "top-right",
+    autoClose: 2000,
+    hideProgressBar: true,
+    closeOnClick: true,
+    pauseOnHover: false,
+    draggable: true,
+    progress: undefined,
+    theme: "colored",
+};
 
+const formatDateToDDMMYYYY = (dateString) => {
+    if (!dateString) return '';
+  
+    const date = new Date(dateString);
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const year = date.getFullYear();
+    
+    return `${day}/${month}/${year}`;
+  };
 const renderScrollableCell = (params) => {
     return (
       <div className="myScrollableCell" style={{ maxHeight: '50px', overflow: 'auto',whiteSpace: 'pre-line',paddingRight: '8px',textAlign: 'left' }}>
@@ -74,26 +95,33 @@ const LastikOtelComponent = () => {
         { field: 'isim', headerName: 'Isim', width: 130 },
         { field: 'numara', headerName: 'Numara', width: 130 },
         { field: 'girisTarih', headerName: 'Giris Tarih', type: 'date', width: 130,
-        valueGetter: (params) => params.value ? new Date(params.value) : null},
+        valueGetter: (params) => params.value ? new Date(params.value) : null,valueFormatter: ({ value }) => value ? formatDateToDDMMYYYY(value) : '' },
 
         { field: 'cikisTarih', headerName: 'Cikis Tarih', type: 'date', width: 130,
-        valueGetter: (params) => params.value ? new Date(params.value) : null},
+        valueGetter: (params) => params.value ? new Date(params.value) : null,valueFormatter: ({ value }) => value ? formatDateToDDMMYYYY(value) : '' },
 
         {
             field: 'actions',
             headerName: 'Arşivle',
             sortable: false,
             width: 100,
-            renderCell: (params) => (
-                <IconButton disabled={ !(params.row.aktif) }   onClick={() => handleArchive(params.row.id)}    style={{ 
-                    color: 'white', // White icon
-                    backgroundColor: 'grey', // Red background
-                    margin: '4px', // Optional: for spacing
-                }}>
-                    <ArchiveIcon />
-                    
-                </IconButton>
-            ),
+            renderCell: (params) => {
+                // Only render the button if the row is active
+                if (params.row.aktif) {
+                    return (
+                        <IconButton onClick={() => handleArchive(params.row.id)} style={{ 
+                                color: 'white', // White icon
+                                backgroundColor: 'grey', // Grey background
+                                margin: '4px', // Optional: for spacing
+                            }}>
+                            <ArchiveIcon />
+                        </IconButton>
+                    );
+                }
+        
+                // Return null or an empty element if the row is not active
+                return null;
+            },
         },
 
         {
@@ -157,22 +185,20 @@ const LastikOtelComponent = () => {
     };
 
 
+
     const handleAdd = async () => {
         try {
             await LastikOtelService.createLastikOtel(newLastikOtel);
             fetchData();
-            setNewLastikOtel({ 
-                description: '', 
-                plaka: '', 
-                isim: '', 
-                numara: '', 
-                fiyat: 0 
-            }); // Reset form with all fields defined
+            setNewLastikOtel({ description: '', plaka: '', isim: '', numara: '', fiyat: 0 }); // Reset form
             handleClose();
+            toast.success('Kayıt başarıyla eklendi.', toastSettings);
         } catch (error) {
             console.error('Error adding new data: ', error);
+            toast.error('Kayıt eklerken bir hata oluştu.', toastSettings);
         }
     };
+    
     
 
     const handleChange = (e) => {
@@ -208,9 +234,10 @@ const LastikOtelComponent = () => {
             // Call the PATCH endpoint
             await LastikOtelService.archiveLastikOtel(id);
             fetchData(); // Refresh the data
+            toast.success('Kayıt Başarıyla Arşivlendi.', toastSettings);
         } catch (error) {
             console.error('Error archiving data: ', error);
-            // Optionally, display an error message to the user
+            toast.error('Kayıt Arşivlenirken Bir Hata Oluştu.', toastSettings);
         }
     };
 

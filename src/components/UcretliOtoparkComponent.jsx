@@ -37,6 +37,18 @@ const StyledDataGrid = styled(DataGrid)(({ theme }) => ({
     },
     // ... add other row styles if needed
   }));
+
+  const formatDateToDDMMYYYY = (dateString) => {
+    if (!dateString) return '';
+
+    const date = new Date(dateString);
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const year = date.getFullYear();
+    
+    return `${day}/${month}/${year}`;
+};
+
   
   
 const UcretliOtoparkComponent = () => {
@@ -67,9 +79,9 @@ const UcretliOtoparkComponent = () => {
        
         { field: 'isim', headerName: 'İsim', width: 130 },
         { field: 'numara', headerName: 'Numara', width: 130 },
-        { field: 'girisTarih', headerName: 'Giriş Tarihi', type: 'date', width: 130 ,valueGetter: (params) => params.value ? new Date(params.value) : null},
-        { field: 'cikisTarih', headerName: 'Çıkış Tarihi', type: 'date', width: 130,valueGetter: (params) => params.value ? new Date(params.value) : null },
-        { field: 'aktif', headerName: 'Aktif', type: 'boolean', width: 90 },
+        { field: 'girisTarih', headerName: 'Giriş Tarihi', type: 'date', width: 130 ,valueGetter: (params) => params.value ? new Date(params.value) : null,valueFormatter: ({ value }) => value ? formatDateToDDMMYYYY(value) : '' },
+        { field: 'cikisTarih', headerName: 'Çıkış Tarihi', type: 'date', width: 130,valueGetter: (params) => params.value ? new Date(params.value) : null,valueFormatter: ({ value }) => value ? formatDateToDDMMYYYY(value) : '' },
+        
         { field: 'paid', headerName: 'Ödendi', type: 'boolean', width: 90 },
         {
             field: 'actions',
@@ -209,8 +221,10 @@ const UcretliOtoparkComponent = () => {
         });
     };
 
-    const isCikisTarihBeforeCurrentDateAndAktif = (cikisTarih, aktif) => {
-        if (!aktif || !cikisTarih) return false;
+    const isCikisTarihBeforeCurrentDateAndAktif = (cikisTarih, paid) => {
+        console.log(cikisTarih);
+        console.log(paid);
+        if (paid || !cikisTarih) return false;
     
         const today = new Date();
         today.setHours(0, 0, 0, 0); // Reset time part to start of the day
@@ -220,13 +234,13 @@ const UcretliOtoparkComponent = () => {
     };
     
    const getRowClassName = (params) => {
-        if (isCikisTarihBeforeCurrentDateAndAktif(params.row.cikisTarih, params.row.aktif)) {
+        if (isCikisTarihBeforeCurrentDateAndAktif(params.row.cikisTarih, params.row.paid)) {
             return 'row-old'; // The CSS class that applies the red background
         }
         return '';
     };
     const applyFilter = (filter) => {
-        const filteredData = filter ? allRows.filter(item => item.aktif) : allRows;
+        const filteredData = filter ? allRows.filter(item => !item.paid) : allRows;
         setRows(filteredData);
     };
     
@@ -259,7 +273,7 @@ const UcretliOtoparkComponent = () => {
                     applyFilter(newFilterState);
                 }}
                 >
-                    {filterAktif ? 'Hepsini Göster' : 'Aktifleri Göster'}
+                    {filterAktif ? 'Hepsini Göster' : 'Ödenmeyenleri Göster'}
                 </Button>
 
             <Box sx={{ height: 400, width: '100%',backgroundColor: 'white' }}>

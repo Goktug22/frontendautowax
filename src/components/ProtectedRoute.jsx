@@ -12,7 +12,7 @@ const PrivateRoutes = () => {
     const setSessionTimeout = (jwt) => {
         const decodedToken = jwtDecode(jwt);
         const currentTime = Date.now().valueOf() / 1000;
-        console.log(  decodedToken.exp );
+        console.log(  decodedToken );
         if (decodedToken.exp < currentTime) {
           // Token already expired
           logoutUser();

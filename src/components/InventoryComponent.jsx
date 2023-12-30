@@ -8,7 +8,16 @@ import InventoryChangeLogService from '../services/InventoryChangeLogService';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 
+const formatDateToDDMMYYYY = (dateString) => {
+    if (!dateString) return '';
 
+    const date = new Date(dateString);
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const year = date.getFullYear();
+    
+    return `${day}/${month}/${year}`;
+};
 
 const renderScrollableCell = (params) => {
     return (
@@ -133,7 +142,8 @@ const InventoryComponent = () => {
     const logColumns = [
 
         { field: 'changeDate', headerName: 'Değişim Tarihi', type: 'date', width: 200,
-        valueGetter: (params) => params.value ? new Date(params.value) : null},
+        valueGetter: (params) => params.value ? new Date(params.value) : null,valueFormatter: ({ value }) => value ? formatDateToDDMMYYYY(value) : ''    },
+        
 
 
 

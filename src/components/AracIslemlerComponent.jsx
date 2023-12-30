@@ -11,7 +11,20 @@ import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
+import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 
+
+
+const formatDateToDDMMYYYY = (dateString) => {
+  if (!dateString) return '';
+
+  const date = new Date(dateString);
+  const day = date.getDate().toString().padStart(2, '0');
+  const month = (date.getMonth() + 1).toString().padStart(2, '0');
+  const year = date.getFullYear();
+  
+  return `${day}/${month}/${year}`;
+};
 
 function getCarBrandLabel(value) {
   switch (value) {
@@ -210,37 +223,56 @@ function CustomToolbar({ onApplyFilter, islemler } ) {
     return (
     
       <Box display="flex" alignItems="center" gap={2} sx={ {paddingTop: '15px', paddingBottom: '15px'}} >
+         
         <DatePicker
           label="Başlangıç Tarihi"
           value={startDate}
           onChange={setStartDate}
+          format="dd/MM/yyyy"
           renderInput={(params) => <TextField {...params} />}
+          slotProps={{ field: { clearable: true } }}
+          
+          
         />
+
+    
         <DatePicker
           label="Bitiş Tarihi"
           value={endDate}
           onChange={setEndDate}
           renderInput={(params) => <TextField {...params} />}
+          format="dd/MM/yyyy"
+          slotProps={{ field: { clearable: true } }}
         />
 
-        <FormControl sx={{ m: 1, width: 300 }}>
-        <InputLabel    >İşlemler</InputLabel>
-          <Select
-              label="İşlemler"
-              multiple
-              value={selectedIslemler}
-              onChange={handleChangeSelectedIslemler}
-              renderValue={(selected) => selected.map(id => islemler.find(islem => islem.id === id).name).join(', ')} 
-              
-          >
-              {islemler.map((islem) => (
-                  <MenuItem key={islem.id} value={islem.id}>
-                      <Checkbox checked={selectedIslemler.indexOf(islem.id) > -1} />
-                      <ListItemText primary={islem.name} />
-                  </MenuItem>
-              ))}
-          </Select>
-        </FormControl>
+      
+
+<FormControl sx={{ m: 1, width: 300 }}>
+  <InputLabel>İşlemler</InputLabel>
+  <Select
+    label="İşlemler"
+    multiple
+    value={selectedIslemler}
+    onChange={handleChangeSelectedIslemler}
+    renderValue={(selected) => selected.map(id => islemler.find(islem => islem.id === id).name).join(', ')}
+    MenuProps={{
+      PaperProps: {
+        style: {
+          maxHeight: 200,  // Set maximum height (in pixels)
+          overflow: 'auto', // Enable scrolling
+        },
+      },
+    }}
+  >
+    {islemler.map((islem) => (
+      <MenuItem key={islem.id} value={islem.id}>
+        <Checkbox checked={selectedIslemler.indexOf(islem.id) > -1} />
+        <ListItemText primary={islem.name} />
+      </MenuItem>
+    ))}
+  </Select>
+</FormControl>
+
 
 
         <Button startIcon={<FilterAltIcon />} variant="contained" style={{textTransform: 'none',backgroundColor:'#85857f', border: '1px solid black'}} onClick={handleApplyFilter}>
@@ -277,9 +309,9 @@ function AracislemlerComponent() {
         { field: 'smsSent', headerName: 'SMS Gönderildi', width: 150, type: 'boolean' },
         { field: 'odemeYontemi', headerName: 'Ödeme Yöntemi', width: 150, renderCell: (params) => paymentSwitch(params.value) },
         { field: 'girisTarih', headerName: 'Giriş Tarihi', width: 200 , type: 'date',
-        valueGetter: (params) => params.value ? new Date(params.value) : null},
+        valueGetter: (params) => params.value ? new Date(params.value) : null,valueFormatter: ({ value }) => value ? formatDateToDDMMYYYY(value) : '' },
         { field: 'cikisTarih', headerName: 'Çıkış Tarihi', width: 200, type: 'date',
-        valueGetter: (params) => params.value ? new Date(params.value) : null},
+        valueGetter: (params) => params.value ? new Date(params.value) : null,valueFormatter: ({ value }) => value ? formatDateToDDMMYYYY(value) : '' },
         {
           field: 'personel',
           headerName: 'Personel',

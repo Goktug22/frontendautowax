@@ -17,6 +17,18 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import { toast } from "react-toastify";
 import FilterListIcon from '@mui/icons-material/FilterList';
 
+
+const formatDateToDDMMYYYY = (dateString) => {
+    if (!dateString) return '';
+
+    const date = new Date(dateString);
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const year = date.getFullYear();
+    
+    return `${day}/${month}/${year}`;
+};
+
 const SaleComponent = () => {
     const [sales, setSales] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -41,7 +53,7 @@ const SaleComponent = () => {
         { field: 'paid', headerName: 'Ödendi', type: 'boolean', width: 90 },
         { field: 'name', headerName: 'Adı', width: 150 },
         { field: 'number', headerName: 'Numara', width: 150 },
-        { field: 'createDate', headerName: 'Oluşturulma Tarihi', type: 'date', width: 180, valueGetter: (params) => params.value ? new Date(params.value) : null, },
+        { field: 'createDate', headerName: 'Oluşturulma Tarihi', type: 'date', width: 180, valueGetter: (params) => params.value ? new Date(params.value) : null,valueFormatter: ({ value }) => value ? formatDateToDDMMYYYY(value) : ''  },
         {
             field: 'actions',
             headerName: 'İşlemler',
