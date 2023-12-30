@@ -5,15 +5,12 @@ import { styled, Box } from '@mui/system';
 import { Modal as BaseModal } from '@mui/base/Modal';   
 import { useState,useEffect } from 'react';
 import Fade from '@mui/material/Fade';
-import axios from 'axios';
 import AracislemService from '../services/AracislemService';
 import { toast } from "react-toastify";
 import Select from 'react-select';
 import makeAnimated from 'react-select/animated';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Form from 'react-bootstrap/Form';
-
-import  {components} from 'react-select';
 import IslemService from '../services/IslemService';
 
 
@@ -451,7 +448,7 @@ const requestData = event => {
                                 <thead>
                                   <tr>
                                   
-                                  <th style={{ display: lastThreeEntries.length == 0 ? 'none' : 'table-cell' }} colSpan={2}>Önceki İşlemler</th>
+                                  <th style={{ display: lastThreeEntries.length === 0 ? 'none' : 'table-cell' }} colSpan={2}>Önceki İşlemler</th>
 
                                    
                                     {/* add more columns as needed */}

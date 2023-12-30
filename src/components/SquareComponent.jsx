@@ -1,10 +1,5 @@
-import DetailedView from "./DetailedViewComponent";
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogTitle from '@mui/material/DialogTitle';
-import Button from '@mui/material/Button';
-import React, { useState } from 'react';
+
+import React from 'react';
 
 
 function getCarBrandLabel(value) {
@@ -178,10 +173,6 @@ function handleClick(col){
 
 }
 
-const handleDialogClick = e => {
-  e.stopPropagation();
-  console.log("B");
-}; 
 
 
     return( 

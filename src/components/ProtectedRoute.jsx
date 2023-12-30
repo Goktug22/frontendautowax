@@ -9,22 +9,7 @@ import {jwtDecode} from 'jwt-decode';
 
 const PrivateRoutes = () => {
 
-    const setSessionTimeout = (jwt) => {
-        const decodedToken = jwtDecode(jwt);
-        const currentTime = Date.now().valueOf() / 1000;
-        console.log(  decodedToken );
-        if (decodedToken.exp < currentTime) {
-          // Token already expired
-          logoutUser();
-          return;
-        }
-
-        
-      
-        setTimeout(() => {
-          logoutUser();
-        }, (decodedToken.exp - currentTime) * 1000);
-      };
+    
       
       const logoutUser = () => {
         localStorage.removeItem('jwt');
@@ -46,6 +31,23 @@ const PrivateRoutes = () => {
     const [auth, setAuth] = useState(null); // Initialize auth as null
 
     useEffect(() => {
+
+      const setSessionTimeout = (jwt) => {
+        const decodedToken = jwtDecode(jwt);
+        const currentTime = Date.now().valueOf() / 1000;
+        console.log(  decodedToken );
+        if (decodedToken.exp < currentTime) {
+          // Token already expired
+          logoutUser();
+          return;
+        }
+
+        
+      
+        setTimeout(() => {
+          logoutUser();
+        }, (decodedToken.exp - currentTime) * 1000);
+      };
         console.log("token check");
         const jwt = localStorage.getItem('jwt');
         if (jwt) {

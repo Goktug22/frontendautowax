@@ -208,7 +208,6 @@ const UcretliOtoparkComponent = () => {
         // Assuming UcretliOtoparkService has a method to get data by plaka
         AracislemService.getLast3AracIslemByPlaka(currentUcretliOtopark.plaka).then((res) => {
             if (res.data.length > 0) {
-                const data = res.data[0]; // Assuming the first record is what you need
                 setCurrentUcretliOtopark(prevState => ({
                     ...prevState,
                     isim: res.data[0].name || '',  // Set isim, default to empty string

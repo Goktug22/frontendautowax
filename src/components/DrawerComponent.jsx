@@ -12,7 +12,6 @@ import LocalCarWash from '@mui/icons-material/LocalCarWash';
 import Home from '@mui/icons-material/Home';
 import Inventory from '@mui/icons-material/Inventory';
 import { useNavigate } from 'react-router-dom';
-import { Opacity } from '@mui/icons-material';
 import CarRepairIcon from '@mui/icons-material/CarRepair';
 import HotelIcon from '@mui/icons-material/Hotel';
 import PersonIcon from '@mui/icons-material/Person';

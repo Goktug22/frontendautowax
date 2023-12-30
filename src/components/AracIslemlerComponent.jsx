@@ -1,6 +1,6 @@
-import React, { useState, useEffect , useRef } from 'react';
-import { DataGrid } from '@mui/x-data-grid';
-import { Box, Button,TextField } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import { DataGrid  } from '@mui/x-data-grid';
+import { Box, Button} from '@mui/material';
 import AracislemService from '../services/AracislemService';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
@@ -11,7 +11,16 @@ import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
-import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
+import logo from "../imgs/autowax.jpg";
+
+import { jsPDF } from "jspdf";
+
+import IconButton from '@mui/material/IconButton';
+import PictureAsPdfIcon  from '@mui/icons-material/PictureAsPdf';
+import "jspdf-autotable";
+import "../font/Roboto-Medium-normal";
+import "../font/Roboto-MediumItalic-normal";
+import "../font/Roboto-Light-normal";
 
 
 
@@ -202,12 +211,14 @@ function paymentSwitch(param) {
 }
 
 
-function CustomToolbar({ onApplyFilter, islemler } ) {
+function CustomToolbar({ onApplyFilter, islemler,exportPDF } ) {
     const [startDate, setStartDate] = React.useState(null);
     const [endDate, setEndDate] = React.useState(null);
     const [selectedIslemler, setSelectedIslemler] = useState([]);
 
-
+    const handleExportPDF = () => {
+      exportPDF(startDate, endDate);
+    };
     
     const handleApplyFilter = () => {
       onApplyFilter({ startDate, endDate },selectedIslemler );
@@ -229,8 +240,8 @@ function CustomToolbar({ onApplyFilter, islemler } ) {
           value={startDate}
           onChange={setStartDate}
           format="dd/MM/yyyy"
-          renderInput={(params) => <TextField {...params} />}
-          slotProps={{ field: { clearable: true } }}
+         
+          slotProps={   { field: { clearable: true } , textField : {variant: 'outlined'} }  }
           
           
         />
@@ -240,9 +251,9 @@ function CustomToolbar({ onApplyFilter, islemler } ) {
           label="Bitiş Tarihi"
           value={endDate}
           onChange={setEndDate}
-          renderInput={(params) => <TextField {...params} />}
+          
           format="dd/MM/yyyy"
-          slotProps={{ field: { clearable: true } }}
+          slotProps={   { field: { clearable: true } , textField : {variant: 'outlined'} }  }
         />
 
       
@@ -278,6 +289,17 @@ function CustomToolbar({ onApplyFilter, islemler } ) {
         <Button startIcon={<FilterAltIcon />} variant="contained" style={{textTransform: 'none',backgroundColor:'#85857f', border: '1px solid black'}} onClick={handleApplyFilter}>
           Filitrele
         </Button>
+
+
+        <IconButton onClick={handleExportPDF} className="pdfIconButton" style={{ 
+          color: 'white', // White icon
+          backgroundColor: 'red', // Red background
+          margin: '4px', // Optional: for spacing
+      }} >
+          <PictureAsPdfIcon />
+      </IconButton>
+
+
       </Box>
     );
   }
@@ -293,6 +315,7 @@ function AracislemlerComponent() {
     const [eftSum, setEftSum] = useState(0);
     const [nakitSum, setNakitSum] = useState(0);
     const [kartSum, setKartSum] = useState(0);
+
 
     const columns = [
        
@@ -319,8 +342,144 @@ function AracislemlerComponent() {
           renderCell: (params) => params.value ? params.value.name : ''
         },
         { field: 'bahsis',align: 'left', headerAlign: 'left', headerName: 'Bahşiş', width: 150, type: 'number' ,renderCell: (params) => params.value != null ? `${params.value} ₺` : '' },
-    ];
+        {
+          field: 'pdf',
+          headerName: 'PDF',
+          renderCell: (params) => (
 
+            <IconButton onClick={() => handlePdfExportForRow(params.row)} className="pdfIconButton" style={{ 
+              color: 'white', // White icon
+              backgroundColor: 'red', // Red background
+              margin: '4px', // Optional: for spacing
+          }} >
+              <PictureAsPdfIcon />
+          </IconButton>
+           
+          ),
+          width: 150,
+        },
+        ];
+
+        const handlePdfExportForRow = (row) => {
+          const doc = new jsPDF();
+
+
+          doc.setFont("Roboto-Medium");
+        
+          doc.addImage(logo, 'JPEG', 150, -16, 50, 50); // Adjust dimensions as needed
+
+          let currentYPosition = 20;
+        
+          const addBoldTextLine = (text, value) => {
+            doc.setFont("Roboto-MediumItalic", "normal"); // Set font to bold
+            doc.text(text, 10, currentYPosition);
+            doc.setFont("Roboto-Light", "normal"); // Set font back to normal
+            doc.text(value, 10 + 40, currentYPosition); // Adjust positioning for value
+            currentYPosition += 10; // Increment the Y position for the next line
+          };
+        
+          addBoldTextLine(`İsim: `, row.name);
+          
+          const islemlerText = getIslemNames(row.islemler).split('\n').join(', ');
+          addBoldTextLine(`İşlemler: `, islemlerText);
+          
+          addBoldTextLine(`Alınan Ödeme: `, `${row.alinanOdeme.toLocaleString()} ₺`);
+          addBoldTextLine(`Plaka: `, row.plaka);
+          addBoldTextLine(`Giriş Tarihi: `, formatDateToDDMMYYYY(row.girisTarih));
+          addBoldTextLine(`Çıkış Tarihi: `, formatDateToDDMMYYYY(row.cikisTarih));
+        
+          doc.save(`Detaylar_${row.name}.pdf`);
+        };
+        
+    
+    const getCurrentFormattedDate = () => {
+      const now = new Date();
+      const day = now.getDate().toString().padStart(2, '0');
+      const month = (now.getMonth() + 1).toString().padStart(2, '0'); // January is 0!
+      const year = now.getFullYear();
+      return `${day}/${month}/${year}`;
+    };
+        
+    
+    const exportPDF = async (startDate, endDate) => {
+
+
+      const doc = new jsPDF();
+      doc.setFont("Roboto-Medium");
+      const formattedStartDate = startDate ? formatDateToDDMMYYYY(startDate) : '';
+      const formattedEndDate = endDate ? formatDateToDDMMYYYY(endDate) : '';
+
+
+      let dateText = '';
+      if (formattedStartDate && formattedEndDate) {
+          dateText = `Başlangıç: ${formattedStartDate}      Bitiş: ${formattedEndDate}`;
+      } else if (formattedStartDate) {
+          dateText = `Başlangıç: ${formattedStartDate}`;
+      } else if (formattedEndDate) {
+          dateText = `Bitiş: ${formattedEndDate}`;
+      }
+      
+      if (dateText) {
+          doc.text(dateText, 10, 10);
+      }
+
+     
+      
+
+      console.log(doc.getFontList());
+
+      // Define column headers for the PDF
+      const tableColumn = ["Plaka", "Islemler", "Personel", "Numara", "Alinan Odeme",  "Bahsis"];
+
+      // Define rows: convert your grid data to the format for PDF
+      const tableRows = filteredData.map(item => [
+        item.plaka, 
+        getIslemNames(item.islemler), // Assuming this function formats the 'islemler' field correctly
+        item.personel ? item.personel.name : '', // Adjust based on how the 'personel' data is structured
+        item.numara, 
+        item.alinanOdeme != null ? `${item.alinanOdeme} ₺` : '',
+        item.bahsis != null ? `${item.bahsis.toLocaleString()} ₺` : '' // Format 'bahsis' as a currency
+      ]);
+    
+      doc.autoTable({
+        head: [tableColumn],
+        body: tableRows,
+        startY: 20,
+        styles: {
+            font: "Roboto-Medium", // or 'times', 'courier'
+            fontSize: 10, // You can set the font size here
+        },
+    });
+
+    let finalY = doc.autoTable.previous.finalY;
+    finalY += 10; 
+
+    // Add your additional content
+    
+      doc.setFontSize(12); // Adjust font size as needed
+      doc.text(`EFT: ${eftSum.toLocaleString()} ₺`, 10, finalY);
+      finalY += 6; // Increment Y position for next line
+      doc.text(`Nakit: ${nakitSum.toLocaleString()} ₺`, 10, finalY);
+      finalY += 6;
+      doc.text(`Kredi Kartı: ${kartSum.toLocaleString()} ₺`, 10, finalY);
+      finalY += 6;
+      doc.text(`Toplam Alınan Ödeme: ${totalSum.toLocaleString()} ₺`, 10, finalY);
+      finalY += 6; 
+    
+
+      finalY += 6; // Adjust space if needed
+      doc.setFontSize(10); // Adjust font size as needed
+      for (const [personelName, totalBahsis] of Object.entries(bahsisTotals)) {
+        doc.text(`${personelName}: ${totalBahsis.toLocaleString()} ₺`, 10, finalY);
+        finalY += 6; // Adjust line spacing if needed
+      }
+      // Save the PDF
+      
+      const formattedDate = getCurrentFormattedDate();
+      doc.save(`${formattedDate}.pdf`);
+    };
+    
+    
 
  
 
@@ -408,6 +567,20 @@ function AracislemlerComponent() {
     );
     });
 
+    const calculateBahsisPerPersonel = (data) => {
+      const totals = {};
+      data.forEach(item => {
+        if (item.personel && item.personel.name && item.bahsis > 0) {
+          totals[item.personel.name] = (totals[item.personel.name] || 0) + item.bahsis;
+        }
+      });
+      return totals;
+    };
+    
+    const bahsisTotals = calculateBahsisPerPersonel(filteredData);
+    
+
+
 
     useEffect(() => {
       
@@ -444,11 +617,11 @@ function AracislemlerComponent() {
         
         <div className='container' >
 
-            
-            <CustomToolbar onApplyFilter={handleApplyFilter} islemler={islemler}  />
-            <Box sx={{ height: 600, width: '100%', backgroundColor: 'white' }}>
+
+
+            <CustomToolbar onApplyFilter={handleApplyFilter} islemler={islemler} exportPDF={exportPDF}  />
+            <Box  sx={{ height: 600, width: '100%', backgroundColor: 'white' }}>
                 <DataGrid
-                
                     rows={filteredData}
                     columns={columns}
                     pageSize={10}
@@ -468,6 +641,15 @@ function AracislemlerComponent() {
               
                 </div>
               </div>
+              <div className='row'>
+              <div className='col'>
+                {Object.entries(bahsisTotals).map(([personelName, totalBahsis]) => (
+                  <div key={personelName}>
+                    <span><b>{personelName}:</b> {totalBahsis.toLocaleString()} ₺</span><br />
+                  </div>
+                ))}
+              </div>
+            </div>
              
               
             </div>

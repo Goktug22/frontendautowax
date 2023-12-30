@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { DataGrid,GridRow } from '@mui/x-data-grid';
+import { DataGrid } from '@mui/x-data-grid';
 import InventoryService from '../services/InventoryService';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
 import Box from '@mui/material/Box';
@@ -210,21 +210,7 @@ const InventoryComponent = () => {
         // Add other columns if needed
     ];
 
-    const CustomRowComponent = (props) => {
-        const { id, expanded, ...otherProps } = props;
-    
-        return (
-            <div>
-                <GridRow {...otherProps} /> {/* Render the normal row */}
-                {expanded && (
-                    <Box sx={{ height: 150, backgroundColor: 'lightgrey', padding: 2 }}>
-                        {/* Place your expanded content here */}
-                        Expanded content for row {id}
-                    </Box>
-                )}
-            </div>
-        );
-    };
+ 
     
 
     return (

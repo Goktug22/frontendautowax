@@ -89,6 +89,10 @@ const SaleComponent = () => {
     }, []);
 
     useEffect(() => {
+        const applyUnpaidFilter = () => {
+            const filteredData = filterUnpaid ?  allSales.filter(sale => !sale.paid) : allSales;
+            setSales(filteredData);
+        };
         applyUnpaidFilter();
     }, [filterUnpaid, allSales]);
 
@@ -106,10 +110,7 @@ const SaleComponent = () => {
         }
     };
 
-    const applyUnpaidFilter = () => {
-        const filteredData = filterUnpaid ?  allSales.filter(sale => !sale.paid) : allSales;
-        setSales(filteredData);
-    };
+   
 
     const handleAddClick = () => {
         setCurrentSale({

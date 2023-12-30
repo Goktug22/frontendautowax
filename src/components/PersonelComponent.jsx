@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
-import { DataGrid, GridRowModes, GridActionsCellItem, GridRowEditStopReasons } from '@mui/x-data-grid';
+import { DataGrid, GridRowModes, GridActionsCellItem } from '@mui/x-data-grid';
 import PersonelService from '../services/PersonelService';
 import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';

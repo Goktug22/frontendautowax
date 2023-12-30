@@ -117,8 +117,6 @@ function IslemlerComponent() {
           ...rowModesModel,
           [id]: { mode: GridRowModes.View, ignoreModifications: true },
         });
-    
-        const editedRow = data.find((row) => row.id === id);
         
       };
 
