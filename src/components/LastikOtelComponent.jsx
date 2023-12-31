@@ -153,11 +153,14 @@ const LastikOtelComponent = () => {
         return girisDate < sixMonthsAgo && !cikisTarih;
     };
 
-    
-    const applyFilter = (filter) => {
-        const filteredData = filter ? allRows.filter(item => item.aktif) : allRows;
-        setRows(filteredData);
-    };
+    useEffect(() => {
+        const applyFilter = () => {
+            const filteredData = filterAktif ? allRows.filter(item => item.aktif) : allRows;
+            setRows(filteredData);
+        };
+        applyFilter();
+    }, [filterAktif, allRows]);
+   
 
     const fetchData = async () => {
         try {
@@ -303,9 +306,8 @@ const LastikOtelComponent = () => {
             variant="contained" 
             style={{ marginLeft: '10px', textTransform: 'none',backgroundColor:'#0a0a09', border: '1px solid black' }} 
             onClick={() => {
-                const newFilterState = !filterAktif;
-                setFilterAktif(newFilterState);
-                applyFilter(newFilterState);
+                setFilterAktif(!filterAktif);
+
             }}
         >
             {filterAktif ? 'Hepsini Göster' : 'Aktifleri Göster'}

@@ -238,10 +238,16 @@ const UcretliOtoparkComponent = () => {
         }
         return '';
     };
-    const applyFilter = (filter) => {
-        const filteredData = filter ? allRows.filter(item => !item.paid) : allRows;
-        setRows(filteredData);
-    };
+
+    useEffect(() => {
+        const applyFilter = () => {
+            const filteredData = filterAktif ? allRows.filter(item => !item.paid) : allRows;
+            setRows(filteredData);
+        };
+        applyFilter();
+    }, [filterAktif, allRows]);
+
+    
     
 
 
@@ -267,9 +273,8 @@ const UcretliOtoparkComponent = () => {
                 variant="contained"
                 style={{ marginLeft: '10px', textTransform: 'none', backgroundColor:'#0a0a09', border: '1px solid black' }}
                 onClick={() => {
-                    const newFilterState = !filterAktif;
-                    setFilterAktif(newFilterState);
-                    applyFilter(newFilterState);
+                    setFilterAktif( !filterAktif);
+                    
                 }}
                 >
                     {filterAktif ? 'Hepsini Göster' : 'Ödenmeyenleri Göster'}
