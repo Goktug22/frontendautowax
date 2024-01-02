@@ -20,6 +20,7 @@ import PublicRoutes from './components/UnprotectedRoute';
 import PersonelComponent from './components/PersonelComponent';
 import UcretliOtoparkComponent from './components/UcretliOtoparkComponent';
 import SaleComponent from './components/SaleComponent';
+import HarcamaComponent from './components/HarcamaComponent';
 
 
 // Other imports...
@@ -56,6 +57,7 @@ function App() {
               <Route path="/lastikotel" element = {<LastikOtelComponent/>}/>
               <Route path="/ucretliotopark" element = {<UcretliOtoparkComponent/>}/>
               <Route path="/satis" element = {<SaleComponent/>}/>
+              <Route path="/harcama" element = {<HarcamaComponent/>}/>
             </Route>
 
           </Routes>

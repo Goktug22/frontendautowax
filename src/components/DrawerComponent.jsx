@@ -17,6 +17,7 @@ import HotelIcon from '@mui/icons-material/Hotel';
 import PersonIcon from '@mui/icons-material/Person';
 import LocalParkingIcon from '@mui/icons-material/LocalParking';
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
+import CurrencyLiraIcon from '@mui/icons-material/CurrencyLira';
 
 function TemporaryDrawer() {
   const [state, setState] = React.useState({
@@ -51,6 +52,10 @@ function TemporaryDrawer() {
   const handleSalesNavigation = () => {
     navigate('/satis');
   };
+  const handleHarcamaNavigation = () => {
+    navigate('/harcama');
+  };
+  
   
 
 
@@ -143,6 +148,15 @@ function TemporaryDrawer() {
               <MonetizationOnIcon /> 
             </ListItemIcon>
             <ListItemText primary="Satış" />
+          </ListItemButton>
+        </ListItem>
+
+        <ListItem key="harcamaTab" disablePadding>
+          <ListItemButton onClick={handleHarcamaNavigation}>
+            <ListItemIcon>
+              <CurrencyLiraIcon /> 
+            </ListItemIcon>
+            <ListItemText primary="Harcamalar" />
           </ListItemButton>
         </ListItem>
 

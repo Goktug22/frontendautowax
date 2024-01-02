@@ -13,6 +13,7 @@ import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import logo from "../imgs/autowax.jpg";
 
+
 import { jsPDF } from "jspdf";
 
 import IconButton from '@mui/material/IconButton';
@@ -21,8 +22,21 @@ import "jspdf-autotable";
 import "../font/Roboto-Medium-normal";
 import "../font/Roboto-MediumItalic-normal";
 import "../font/Roboto-Light-normal";
+import HarcamaService from '../services/HarcamaService';
 
+const formatDate = (date) => {
+  const d = new Date(date);
+  let month = '' + (d.getMonth() + 1);
+  let day = '' + d.getDate();
+  const year = d.getFullYear();
 
+  if (month.length < 2) 
+      month = '0' + month;
+  if (day.length < 2) 
+      day = '0' + day;
+
+  return [year, month, day].join('-');
+};
 
 const formatDateToDDMMYYYY = (dateString) => {
   if (!dateString) return '';
@@ -404,10 +418,45 @@ function AracislemlerComponent() {
     const exportPDF = async (startDate, endDate) => {
 
 
+      const addNewPageIfNeeded = () => {
+        const pageHeight = doc.internal.pageSize.height;
+        if (finalY > pageHeight) {
+            doc.addPage();
+            finalY = 10; // Reset Y position to top of the new page
+        }
+    };
+
       const doc = new jsPDF();
       doc.setFont("Roboto-Medium");
       const formattedStartDate = startDate ? formatDateToDDMMYYYY(startDate) : '';
       const formattedEndDate = endDate ? formatDateToDDMMYYYY(endDate) : '';
+
+      let harcamaTotal = 0;
+      let bahsisTotal = 0;
+
+      // Format dates to YYYY-MM-DD
+      
+      const a = formatDate(startDate);
+      const b = formatDate(endDate);
+      console.log(a);
+      
+
+
+
+      let harcamaData = [];
+      if (startDate && endDate) {
+          try {
+              const response = await HarcamaService.getBetweenDates(a,b);
+              harcamaData = response.data;
+              harcamaTotal = harcamaData.reduce((total, harcama) => total + harcama.miktar, 0);
+              
+          } catch (error) {
+              console.error('Error fetching harcama data: ', error);
+              // Handle error (e.g., show an alert or a toast notification)
+          }
+      }
+      bahsisTotal = filteredData.reduce((total, item) => total + (item.bahsis || 0), 0);
+      let adjustedTotalSum = totalSum - harcamaTotal - bahsisTotal;
 
 
       let dateText = '';
@@ -425,8 +474,6 @@ function AracislemlerComponent() {
 
      
       
-
-      console.log(doc.getFontList());
 
       // Define column headers for the PDF
       const tableColumn = ["Plaka", "Islemler", "Personel", "Numara", "Alinan Odeme",  "Bahsis"];
@@ -455,19 +502,24 @@ function AracislemlerComponent() {
     finalY += 10; 
 
     // Add your additional content
-    
+      addNewPageIfNeeded();
       doc.setFontSize(12); // Adjust font size as needed
       doc.text(`EFT: ${eftSum.toLocaleString()} ₺`, 10, finalY);
       finalY += 6; // Increment Y position for next line
+      addNewPageIfNeeded();
       doc.text(`Nakit: ${nakitSum.toLocaleString()} ₺`, 10, finalY);
       finalY += 6;
+      addNewPageIfNeeded();
       doc.text(`Kredi Kartı: ${kartSum.toLocaleString()} ₺`, 10, finalY);
       finalY += 6;
+      addNewPageIfNeeded();
       doc.text(`Toplam Alınan Ödeme: ${totalSum.toLocaleString()} ₺`, 10, finalY);
       finalY += 6; 
+      addNewPageIfNeeded();
     
 
       finalY += 6; // Adjust space if needed
+      addNewPageIfNeeded();
       doc.setFontSize(10); // Adjust font size as needed
       for (const [personelName, totalBahsis] of Object.entries(bahsisTotals)) {
         doc.text(`${personelName}: ${totalBahsis.toLocaleString()} ₺`, 10, finalY);
@@ -475,6 +527,32 @@ function AracislemlerComponent() {
       }
       // Save the PDF
       
+      addNewPageIfNeeded();
+
+      
+      if (harcamaData.length > 0) {
+          // Create a string with each Harcama in the "description(miktar)" format
+          const harcamaDescriptions = harcamaData.map(harcama => `${harcama.description}( ${harcama.miktar} ₺ )`).join(', ');
+          
+          doc.setFontSize(10); // Adjust font size as needed
+          doc.text("Harcamalar: "  +  harcamaDescriptions, 10, finalY);
+          finalY += 10; // Increment Y position for next content
+      }
+      addNewPageIfNeeded();
+
+
+      finalY += 10; 
+      addNewPageIfNeeded();
+      // Add Harcama and Bahsis totals
+      doc.setFontSize(10);
+      doc.text(`Toplam Harcama: ${harcamaTotal.toLocaleString()} ₺`, 10, finalY);
+      finalY += 6;
+      addNewPageIfNeeded();
+      doc.text(`Toplam Bahsis: ${bahsisTotal.toLocaleString()} ₺`, 10, finalY);
+      finalY += 6;
+      addNewPageIfNeeded();
+      doc.text(`Harcama ve Bahşiş çıktıktan sonra Toplam Ödeme: ${adjustedTotalSum.toLocaleString()} ₺`, 10, finalY);
+
       const formattedDate = getCurrentFormattedDate();
       doc.save(`${formattedDate}.pdf`);
     };
