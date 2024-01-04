@@ -1,29 +1,32 @@
-import React, { Component } from 'react';
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import TemporaryDrawer from './DrawerComponent';
-class HeaderComponent extends Component {
 
-    constructor(props){
-        super(props);
-        this.state = {
+function HeaderComponent() {
+    const navigate = useNavigate();
 
-        }
-    }
-    render() {
-        return (
-            <div id='myhead'>
-
-                <header> 
-                    <nav className='navbar navbar-expand-md myhead'>
+    return (
+        <div id='myhead'>
+            <header> 
+                <nav className='navbar navbar-expand-md myhead'>
                     <TemporaryDrawer />
-                        <div> <a href='/home'className='navbar-brand' style={ { opacity : 1, fontWeight: 600}} > Autowax </a></div>
-                        
-                    </nav>
-
-                </header>
-                
-            </div>
-        );
-    }
+                    <div>
+                        <a
+                            href="/home"
+                            className='navbar-brand'
+                            style={{ opacity: 1, fontWeight: 600 }}
+                            onClick={(e) => {
+                                e.preventDefault();
+                                navigate('/home');
+                            }}
+                            >
+                            Autowax
+                        </a>
+                    </div>
+                </nav>
+            </header>
+        </div>
+    );
 }
 
 export default HeaderComponent;
