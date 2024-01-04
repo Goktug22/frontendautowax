@@ -18,7 +18,7 @@ import PersonIcon from '@mui/icons-material/Person';
 import LocalParkingIcon from '@mui/icons-material/LocalParking';
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 import CurrencyLiraIcon from '@mui/icons-material/CurrencyLira';
-
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 function TemporaryDrawer() {
   const [state, setState] = React.useState({
     left: false,
@@ -54,6 +54,9 @@ function TemporaryDrawer() {
   };
   const handleHarcamaNavigation = () => {
     navigate('/harcama');
+  };
+  const handleCalendarNavigation = () => {
+    navigate('/takvim');
   };
   
   
@@ -157,6 +160,15 @@ function TemporaryDrawer() {
               <CurrencyLiraIcon /> 
             </ListItemIcon>
             <ListItemText primary="Harcamalar" />
+          </ListItemButton>
+        </ListItem>
+
+        <ListItem key="calendarTab" disablePadding>
+          <ListItemButton onClick={handleCalendarNavigation}>
+            <ListItemIcon>
+              <CalendarMonthIcon /> 
+            </ListItemIcon>
+            <ListItemText primary="Randevular" />
           </ListItemButton>
         </ListItem>
 

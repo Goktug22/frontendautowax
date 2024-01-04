@@ -21,6 +21,7 @@ import PersonelComponent from './components/PersonelComponent';
 import UcretliOtoparkComponent from './components/UcretliOtoparkComponent';
 import SaleComponent from './components/SaleComponent';
 import HarcamaComponent from './components/HarcamaComponent';
+import CalendarComponent from './components/CalendarComponent';
 
 
 // Other imports...
@@ -58,6 +59,7 @@ function App() {
               <Route path="/ucretliotopark" element = {<UcretliOtoparkComponent/>}/>
               <Route path="/satis" element = {<SaleComponent/>}/>
               <Route path="/harcama" element = {<HarcamaComponent/>}/>
+              <Route path="/takvim" element = {<CalendarComponent/>}/>
             </Route>
 
           </Routes>
