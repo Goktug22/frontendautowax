@@ -2,7 +2,7 @@ import axios from 'axios';
 
 axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('jwt')}`;
 
-const HARCAMA_API_BASE_URL = "http://localhost:8081/api/v1/harcama"; // Adjust as necessary
+const HARCAMA_API_BASE_URL = `${process.env.REACT_APP_API_BASE_URL}/api/v1/harcama`; // Adjust as necessary
 
 class HarcamaService {
     getHarcamaList() {

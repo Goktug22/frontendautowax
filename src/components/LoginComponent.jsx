@@ -28,7 +28,7 @@ function LoginComponent() {
 
         try {
             delete axios.defaults.headers.common["Authorization"];
-            const response = await axios.post('http://localhost:8081/api/v1/authenticate', { username, password });
+            const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/v1/authenticate`, { username, password });
             console.log(response.data.jwt);
             localStorage.setItem('jwt', response.data.jwt);
             axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('jwt')}`;

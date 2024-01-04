@@ -3,8 +3,8 @@ import axios from 'axios';
 axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('jwt')}`;  
 
 
-const LO_API_BASE_URL = "http://localhost:8081/api/v1/lastikotel";
-const LOAKTIF_API_BASE_URL = "http://localhost:8081/api/v1/lastikotelaktif";
+const LO_API_BASE_URL = `${process.env.REACT_APP_API_BASE_URL}/api/v1/lastikotel`;
+const LOAKTIF_API_BASE_URL = `${process.env.REACT_APP_API_BASE_URL}/api/v1/lastikotelaktif`;
 
 
 class LastikOtelService {

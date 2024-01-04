@@ -17,11 +17,11 @@ else{
 
 
 
-const ARACISLEM_API_BASE_URL = "http://localhost:8081/api/v1/aracislem";
-const ARACISLEM_API_SMS_URL = "http://localhost:8081/api/v1/sendsmsaracislembyid";
-const ARACISLEM_API_ARCHIVE_URL = "http://localhost:8081/api/v1/archivearacislembyid";
-const ARACISLEM_API_BASE_AKTIF_URL = "http://localhost:8081/api/v1/aracislemaktif";
-const ARACISLEM_API_LAST_URL = "http://localhost:8081/api/v1/aracislemlast3";
+const ARACISLEM_API_BASE_URL = `${process.env.REACT_APP_API_BASE_URL}/api/v1/aracislem`;
+const ARACISLEM_API_SMS_URL = `${process.env.REACT_APP_API_BASE_URL}/api/v1/sendsmsaracislembyid`;
+const ARACISLEM_API_ARCHIVE_URL = `${process.env.REACT_APP_API_BASE_URL}/api/v1/archivearacislembyid`;
+const ARACISLEM_API_BASE_AKTIF_URL = `${process.env.REACT_APP_API_BASE_URL}/api/v1/aracislemaktif`;
+const ARACISLEM_API_LAST_URL = `${process.env.REACT_APP_API_BASE_URL}/api/v1/aracislemlast3`;
 
 
 
